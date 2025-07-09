@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role'
     ];
 
     /**
@@ -56,4 +57,7 @@ class User extends Authenticatable
         return $this->role === 'regular_user';
     }
 
+    public function songs(){
+        return $this->hasMany(Song::class);
+    }
 }
