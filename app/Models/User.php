@@ -47,6 +47,7 @@ class User extends Authenticatable
         ];
     }
 
+    // Implementation of two helpers isAdmin and is Regular user for easier check and access of the users' role
     public function isAdmin()
     {
         return $this->role === 'admin';
@@ -57,6 +58,7 @@ class User extends Authenticatable
         return $this->role === 'regular_user';
     }
 
+    // Defines the relationship between User and Song. One User can have many songs. Each Song should have a User
     public function songs(){
         return $this->hasMany(Song::class);
     }

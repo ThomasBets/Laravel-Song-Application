@@ -10,6 +10,8 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+
+    // Authenticates user and returns an API token if credentials are valid.
     public function login(Request $request){
         $request->validate([
             "email"=> "required|email",
@@ -34,6 +36,7 @@ class AuthController extends Controller
         ]);
     }
 
+// Registers a new user with validated input and hashed password using some restrictions rules.
     public function register(Request $request){
         $validated = $request->validate([
             'name' => 'required|string|max:100',
@@ -55,6 +58,7 @@ class AuthController extends Controller
 
     }
 
+    // Revokes all tokens for the authenticated user to log them out.
     public function logout(Request $request){
         $request->user()->tokens()->delete();
 

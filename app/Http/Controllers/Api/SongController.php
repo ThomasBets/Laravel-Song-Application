@@ -14,9 +14,8 @@ use Illuminate\Support\Facades\Auth;
 class SongController extends Controller
 {
     use AuthorizesRequests;
-    /**
-     * Display a listing of the resource.
-     */
+
+     // List songs, filtered genre with a Query Builder Object, and sorted by release date.
     public function index(Request $request)
     {
         /** @var \App\Models\User $user */
@@ -24,7 +23,7 @@ class SongController extends Controller
 
         $query = Song::query();
 
-        if ($user->isRegularUser()) {
+        if ($user->isRegularUser()) {                                   //Checking the users' role using of the helper 'isRegularUser' that is defined at the User Model
             $query->where('user_id', $user->id);
         }
 
@@ -38,9 +37,8 @@ class SongController extends Controller
         return $query->get();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+     // Validate using the required restrictions and create a new song for the authenticated user.
+
     public function store(Request $request)
     {
         /** @var \App\Models\User $user */
@@ -52,7 +50,7 @@ class SongController extends Controller
             ...$request->validate([
             'title' =>'required|string|max:100',
             'description'=> 'nullable|string',
-            'genre'=> 'required|string|max:55|in: Classical, Pop, Rock, Hip-hop, Electronic, Jazz',
+            'genre'=> 'required|string|max:55|in:Classical,Pop,Rock,Hip-hop,Electronic,Jazz',
             'release_date'=> 'required|date'
             ]),
             'user_id' => $user->id
@@ -60,9 +58,7 @@ class SongController extends Controller
         return $song;
     }
 
-    /**
-     * Display the specified resource.
-     */
+     // Show details of a specific song after authorization.
     public function show(Song $song)
     {
         $this->authorize('view', $song);
@@ -70,9 +66,7 @@ class SongController extends Controller
         return $song;
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // Validate and update the given song if the user is authorized.
     public function update(Request $request, Song $song)
     {
         $this->authorize('update', $song);
@@ -92,9 +86,7 @@ class SongController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // Delete the specified song after checking permissions.
     public function destroy(Song $song)
     {
         $this->authorize('delete', $song);

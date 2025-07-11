@@ -23,17 +23,22 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        /* Create a weighted list of roles: 8 'regular_user' and 2 'admin'
+         This ensures that most generated users will be regular users */
+
         $roles = array_merge(
     array_fill(0, 8, 'regular_user'),
             array_fill(0, 2, 'admin')
         );
+
+        //Generate the user table fields with random values using the given restrictions
 
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'role' => $this->faker->randomElement($roles),
+            'role' => $this->faker->randomElement($roles), // Randomly selects a role from the biased list of roles
             'remember_token' => Str::random(10),
         ];
     }

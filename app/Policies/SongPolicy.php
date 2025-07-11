@@ -13,7 +13,8 @@ class SongPolicy
      */
     public function viewAny(): bool
     {
-        return true;
+        return true;    // Implementation of the authorisation rules at the 'index' function of the SongController
+                        //because two different actions is required depending the user role
     }
 
     /**
@@ -21,7 +22,7 @@ class SongPolicy
      */
     public function view(User $user, Song $song): bool
     {
-        return $user->id === $song->user_id || $user->isAdmin();
+        return $user->id === $song->user_id || $user->isAdmin(); // Allows the user to view a song only if he owns the song or is an admin.
     }
 
     /**
@@ -37,7 +38,7 @@ class SongPolicy
      */
     public function update(User $user, Song $song): bool
     {
-        return $user->id === $song->user_id;
+        return $user->id === $song->user_id;    // Allows update only if the song belongs to the user.
     }
 
     /**
@@ -45,7 +46,7 @@ class SongPolicy
      */
     public function delete(User $user, Song $song): bool
     {
-        return $user->id === $song->user_id || $user->isAdmin();
+        return $user->id === $song->user_id || $user->isAdmin(); // Allows deletion if the user owns the song or is an admin.
     }
 
     /**
