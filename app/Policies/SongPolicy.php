@@ -11,9 +11,9 @@ class SongPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user, Song $song): bool
+    public function viewAny(): bool
     {
-        return $user->id === $song->user_id || $user->isAdmin();
+        return true;
     }
 
     /**
@@ -21,13 +21,13 @@ class SongPolicy
      */
     public function view(User $user, Song $song): bool
     {
-        return true;
+        return $user->id === $song->user_id || $user->isAdmin();
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(): bool
     {
         return true;
     }
@@ -37,7 +37,7 @@ class SongPolicy
      */
     public function update(User $user, Song $song): bool
     {
-        return $user->id === $song->user_id;;
+        return $user->id === $song->user_id;
     }
 
     /**

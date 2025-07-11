@@ -17,31 +17,42 @@ class SongController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(User $user)
+    public function index(Request $request)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        if ($user->isAdmin()) {
-            return Song::all();
+        $query = Song::query();
+
+        if ($user->isRegularUser()) {
+            $query->where('user_id', $user->id);
         }
-        else {
-            return $user->songs;
+
+        if ($request->has('genre')) {
+            $query->where('genre', $request->input('genre'));
         }
+
+        $sort = $request->input('sort', 'desc');
+        $query->orderBy('release_date', $sort);
+
+        return $query->get();
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, User $user)
+    public function store(Request $request)
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
         $this->authorize('create', Song::class);
 
         $song = Song::create([
             ...$request->validate([
             'title' =>'required|string|max:100',
             'description'=> 'nullable|string',
-            'genre'=> 'required|string|max:55',
+            'genre'=> 'required|string|max:55|in: Classical, Pop, Rock, Hip-hop, Electronic, Jazz',
             'release_date'=> 'required|date'
             ]),
             'user_id' => $user->id
@@ -52,7 +63,7 @@ class SongController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user, Song $song)
+    public function show(Song $song)
     {
         $this->authorize('view', $song);
 
@@ -62,7 +73,7 @@ class SongController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user, Song $song)
+    public function update(Request $request, Song $song)
     {
         $this->authorize('update', $song);
 
@@ -79,13 +90,12 @@ class SongController extends Controller
             'message'=> 'Song updated successfully!',
             'data' => $song
         ]);
-
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user, Song $song)
+    public function destroy(Song $song)
     {
         $this->authorize('delete', $song);
 
