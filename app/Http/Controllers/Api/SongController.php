@@ -7,9 +7,9 @@ use App\Models\Song;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Http\Resources\SongResource;
-use User as GlobalUser;
+
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class SongController extends Controller
 {
@@ -19,22 +19,22 @@ class SongController extends Controller
     public function index(Request $request)
     {
         /** @var \App\Models\User $user */
-        $user = Auth::user();
+       // $user = Auth::user();
 
         $query = Song::query();
 
-        if ($user->isRegularUser()) {                                   //Checking the users' role using of the helper 'isRegularUser' that is defined at the User Model
+        /* if ($user->isRegularUser()) {                                   //Checking the users' role using of the helper 'isRegularUser' that is defined at the User Model
             $query->where('user_id', $user->id);
-        }
+        } */
 
         if ($request->has('genre')) {
             $query->where('genre', $request->input('genre'));
         }
 
         $sort = $request->input('sort', 'desc');
-        $query->orderBy('release_date', $sort);
+        $songs = $query->orderBy('release_date', $sort)->paginate(100);
 
-        return $query->get();
+        return inertia('Songs/Dashboard', ['songs' => $songs]);
     }
 
      // Validate using the required restrictions and create a new song for the authenticated user.
