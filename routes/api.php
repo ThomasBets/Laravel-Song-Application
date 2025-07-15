@@ -11,9 +11,9 @@ use App\Http\Controllers\Api\SongController;
 /* Define API routes for login, register, and logout endpoints handled by the AuthController.
 Ensure that only authenticated users are allowed to access the logout route */
 
-Route::post('/login', [AuthController::class,'login']);
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -21,6 +21,6 @@ Route::post('/register', [AuthController::class, 'register']);
 RESTful routes (index, store, show, update, destroy) handled by SongController.
 The 'auth:sanctum' middleware ensures that only authenticated users can access these routes. */
 
-Route::apiResource('songs',SongController::class)->middleware('auth:sanctum');
+Route::apiResource('songs', SongController::class)->middleware('auth:sanctum');
 
-Route::get('/dashboard', [SongController::class,'index'])->middleware('auth:sanctum');
+Route::get('/dashboard', [SongController::class, 'index'])->middleware('auth:sanctum');

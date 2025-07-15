@@ -13,9 +13,9 @@ use function Termwind\render;
     return inertia('Home', ['name' => 'Thomas']);
 }); */
 
-Route:: get('/dashboard', [SongController::class,'index'] );
+Route::get('/dashboard', [SongController::class, 'index']);
 
-Route::inertia('/login','Auth/Login');
+Route::inertia('/login', 'Auth/Login');
 
 //Route::post('/login', [AuthController::class,'login']);
 

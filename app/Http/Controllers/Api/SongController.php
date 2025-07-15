@@ -15,11 +15,11 @@ class SongController extends Controller
 {
     use AuthorizesRequests;
 
-     // List songs, filtered genre with a Query Builder Object, and sorted by release date.
+    // List songs, filtered genre with a Query Builder Object, and sorted by release date.
     public function index(Request $request)
     {
         /** @var \App\Models\User $user */
-       // $user = Auth::user();
+        // $user = Auth::user();
 
         $query = Song::query();
 
@@ -37,7 +37,7 @@ class SongController extends Controller
         return inertia('Songs/Dashboard', ['songs' => $songs]);
     }
 
-     // Validate using the required restrictions and create a new song for the authenticated user.
+    // Validate using the required restrictions and create a new song for the authenticated user.
 
     public function store(Request $request)
     {
@@ -48,17 +48,17 @@ class SongController extends Controller
 
         $song = Song::create([
             ...$request->validate([
-            'title' =>'required|string|max:100',
-            'description'=> 'nullable|string',
-            'genre'=> 'required|string|max:55|in:Classical,Pop,Rock,Hip-hop,Electronic,Jazz',
-            'release_date'=> 'required|date'
+                'title' => 'required|string|max:100',
+                'description' => 'nullable|string',
+                'genre' => 'required|string|max:55|in:Classical,Pop,Rock,Hip-hop,Electronic,Jazz',
+                'release_date' => 'required|date'
             ]),
             'user_id' => $user->id
         ]);
         return $song;
     }
 
-     // Show details of a specific song after authorization.
+    // Show details of a specific song after authorization.
     public function show(Song $song)
     {
         $this->authorize('view', $song);
@@ -72,16 +72,16 @@ class SongController extends Controller
         $this->authorize('update', $song);
 
         $validated = $request->validate([
-            'title' =>'sometimes|string|max:100',
-            'description'=> 'nullable|string',
-            'genre'=> 'sometimes|string|max:55',
-            'release_date'=> 'sometimes|date'
+            'title' => 'sometimes|string|max:100',
+            'description' => 'nullable|string',
+            'genre' => 'sometimes|string|max:55',
+            'release_date' => 'sometimes|date'
         ]);
 
         $song->update($validated);
 
         return response()->json([
-            'message'=> 'Song updated successfully!',
+            'message' => 'Song updated successfully!',
             'data' => $song
         ]);
     }
