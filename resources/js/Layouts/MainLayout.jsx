@@ -29,13 +29,18 @@ export default function MainLayout({ children }) {
     return (
         <div className="min-h-screen flex flex-col bg-gray-50">
             {/* Header */}
-            <header className="bg-white shadow-md">
+            <header className="bg-gray-950 shadow-indigo-600 shadow-md">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                    <Link to="/" className="text-2xl font-bold text-indigo-600">
-                        🎵 MySongApp
+                    {/* Left: Logo/Home */}
+                    <Link
+                        href="/"
+                        className="text-2xl font-bold text-violet-500"
+                    >
+                        🎵MySongApp
                     </Link>
 
                     {!user ? (
+                        /* Guest Links */
                         <div className="flex gap-4">
                             <Link
                                 href="/login"
@@ -51,8 +56,26 @@ export default function MainLayout({ children }) {
                             </Link>
                         </div>
                     ) : (
-                        <div>
-                            <form onSubmit={handleLogout}>
+                        /* Authenticated Layout */
+                        <div className="flex items-center justify-end w-full">
+                            {/* Middle Links (moved closer to logo) */}
+                            <div className="flex gap-16 ml-16">
+                                <Link
+                                    href="/mysongs"
+                                    className="ml-2 px-5 py-2 bg-blue-100 text-violet-500 rounded-lg hover:bg-violet-600 hover:text-white transition"
+                                >
+                                    My Songs
+                                </Link>
+                                <Link
+                                    href="/post-song"
+                                    className="px-4 py-2 bg-blue-100 text-violet-500 rounded-lg hover:bg-violet-600 hover:text-white transition"
+                                >
+                                    Store a Song
+                                </Link>
+                            </div>
+
+                            {/* Logout Button */}
+                            <form onSubmit={handleLogout} className="ml-auto">
                                 <button className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
                                     Logout
                                 </button>
