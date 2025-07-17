@@ -6,7 +6,7 @@ export default function AuthLayout({ children }) {
             <header className="bg-emerald-200 shadow-sm">
                 <div className="max-w-7xl mx-auto px-6 py-4 ">
                     <Link
-                        href="/dashboard"
+                        href="/"
                         className="text-xl font-semibold text-indigo-500"
                     >
                         🎵 MySongApp
@@ -14,9 +14,7 @@ export default function AuthLayout({ children }) {
                 </div>
             </header>
 
-            <main className="flex-1 max-w-5xl mx-auto py-10 px-4">
-                {children}
-            </main>
+            <main className="w-full h-full bg-gray-50 ">{children}</main>
 
             <footer className="text-center text-gray-600 text-sm py-6">
                 &copy; {new Date().getFullYear()} MySongApp. All rights

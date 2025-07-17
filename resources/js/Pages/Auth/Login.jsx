@@ -1,45 +1,117 @@
 import AuthLayout from "@/Layouts/AuthLayout";
+import { useContext, useState } from "react";
+import { router } from "@inertiajs/react";
+import { AppContext } from "../../Context/AppContext";
 
 export default function Login() {
-     return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form className="bg-white p-6 rounded shadow-md w-full max-w-sm">
-        <h2 className="text-2xl mb-4 font-bold text-center">Login</h2>
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
 
-        <div className="mb-4">
-          <label className="block text-gray-700">Email</label>
-          <input
-            type="email"
-            className="w-full p-2 border border-gray-300 rounded"
-            placeholder="you@example.com"
-          />
+    const { setToken } = useContext(AppContext);
+
+    const [errors, setErrors] = useState({});
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        setErrors({});
+        setMessage("");
+        setLoading(true);
+
+        try {
+            const response = await fetch("/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                setMessage("Login successful!");
+                localStorage.setItem("token", data.token);
+                setToken(data.token);
+                router.visit("/home");
+            } else if (response.status === 422) {
+                setErrors(data.errors || {});
+            } else {
+                setMessage("Something went wrong. Please try again.");
+            }
+        } catch (error) {
+            setMessage("Network error. Please check your connection.");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <form
+                onSubmit={handleLogin}
+                className="bg-white p-6 rounded shadow-md w-full max-w-sm"
+            >
+                <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+
+                <div className="mb-4">
+                    <label className="block text-gray-700 mb-1">Email</label>
+                    <input
+                        type="email"
+                        className="w-full p-2 border border-gray-300 rounded"
+                        placeholder="you@example.com"
+                        value={formData.email}
+                        onChange={(e) =>
+                            setFormData({ ...formData, email: e.target.value })
+                        }
+                    />
+                    {errors.email && (
+                        <p className="text-red-600 text-sm">
+                            {errors.email[0]}
+                        </p>
+                    )}
+                </div>
+
+                <div className="mb-4">
+                    <label className="block text-gray-700 mb-1">Password</label>
+                    <input
+                        type="password"
+                        className="w-full p-2 border border-gray-300 rounded"
+                        placeholder="********"
+                        value={formData.password}
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData,
+                                password: e.target.value,
+                            })
+                        }
+                    />
+                    {errors.password && (
+                        <p className="text-red-600 text-sm">
+                            {errors.password[0]}
+                        </p>
+                    )}
+                </div>
+
+                <button
+                    type="submit"
+                    className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+                >
+                    Login
+                </button>
+
+                <p className="mt-4 text-sm text-center">
+                    Don't have an account?{" "}
+                    <a href="/register" className="text-blue-500 hover:underline">
+                        Register
+                    </a>
+                </p>
+            </form>
         </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700">Password</label>
-          <input
-            type="password"
-            className="w-full p-2 border border-gray-300 rounded"
-            placeholder="********"
-          />
-        </div>
-
-        <button
-          type="button"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-        >
-          Login
-        </button>
-
-        <p className="mt-4 text-sm text-center">
-          Don&apos;t have an account?{" "}
-          <a href="/register" className="text-blue-500 hover:underline">
-            Register
-          </a>
-        </p>
-      </form>
-    </div>
-  );
+    );
 }
 
 Login.layout = (page) => <AuthLayout>{page}</AuthLayout>;

@@ -1,41 +1,71 @@
 import { Link } from "@inertiajs/react";
+import { useContext } from "react";
+import { AppContext } from "../Context/AppContext";
+import { router } from "@inertiajs/react";
 
 export default function MainLayout({ children }) {
+    const { user, token, setUser, setToken } = useContext(AppContext);
+
+    async function handleLogout(e) {
+        e.preventDefault();
+
+        const response = await fetch("/api/logout", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            setUser(null);
+            setToken(null);
+            localStorage.removeItem("token");
+            router.visit("/");
+        }
+    }
+
     return (
-        <div className="min-h-screen bg-gray-50 text-gray-900 flex-col">
-            <header className="bg-emerald-200 shadow-sm">
+        <div className="min-h-screen flex flex-col bg-gray-50">
+            {/* Header */}
+            <header className="bg-white shadow-md">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                    <Link
-                        href="/dashboard"
-                        className="text-xl font-semibold text-indigo-500"
-                    >
+                    <Link to="/" className="text-2xl font-bold text-blue-600">
                         🎵 MySongApp
                     </Link>
-                    <div className="flex gap-4">
-                        <>
+
+                    {!user ? (
+                        <div className="flex gap-4">
                             <Link
                                 href="/login"
-                                className="text-sm text-indigo-500 hover:underline"
+                                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
                             >
                                 Login
                             </Link>
-
-                            <button className="text-sm text-red-600 hover:underline">
-                                Logout
-                            </button>
-                        </>
-                    </div>
+                            <Link
+                                href="/register"
+                                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                            >
+                                Register
+                            </Link>
+                        </div>
+                    ) : (
+                        <div>
+                            <form onSubmit={handleLogout}>
+                                <button className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    )}
                 </div>
             </header>
 
-            <main className="flex-1 max-w-5xl mx-auto py-10 px-4">
+            {/* Main Content */}
+            <main className="flex flex-1 items-center justify-center text-center">
                 {children}
             </main>
-
-            <footer className="mt-10 text-center text-gray-600 text-sm">
-                &copy; {new Date().getFullYear()} MySongApp. All rights
-                reserved.
-            </footer>
         </div>
     );
 }

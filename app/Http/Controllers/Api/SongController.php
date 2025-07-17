@@ -19,7 +19,7 @@ class SongController extends Controller
     public function index(Request $request)
     {
         /** @var \App\Models\User $user */
-        // $user = Auth::user();
+        //$user = Auth::user();
 
         $query = Song::query();
 
@@ -34,7 +34,17 @@ class SongController extends Controller
         $sort = $request->input('sort', 'desc');
         $songs = $query->orderBy('release_date', $sort)->paginate(100);
 
-        return inertia('Songs/Dashboard', ['songs' => $songs]);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'songs' => $songs,
+               // 'user' => $request->user(),
+            ]);
+        }
+
+        return inertia('Songs/Dashboard', [
+            'songs' => $songs,
+            //'authUser' => $request->user(),
+        ]);
     }
 
     // Validate using the required restrictions and create a new song for the authenticated user.

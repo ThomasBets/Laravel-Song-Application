@@ -21,11 +21,7 @@ class AuthController extends Controller
 
         $user = User::where("email", $request->email)->first();
 
-        if (!$user) {
-            throw ValidationException::withMessages(["email" => "The provided credentials are incorrect"]);
-        }
-
-        if (!Hash::check($request->password, (string)$user->password)) {
+        if (!$user || !Hash::check($request->password, (string)$user->password)) {
             throw ValidationException::withMessages(["email" => "The provided credentials are incorrect"]);
         }
 
@@ -54,7 +50,11 @@ class AuthController extends Controller
             'role' => $validated['role']
         ]);
 
+        $token = $user->createToken("api-token")->plainTextToken;
+
         return response()->json([
+            'user' => $user,
+            'token'=> $token,
             'message' => 'You have registered successfully!'
         ]);
     }

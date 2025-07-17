@@ -4,8 +4,6 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\SongController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use function Termwind\render;
 
 
 
@@ -13,12 +11,21 @@ use function Termwind\render;
     return inertia('Home', ['name' => 'Thomas']);
 }); */
 
-Route::get('/dashboard', [SongController::class, 'index']);
+Route::inertia("/", 'Welcome');
 
-Route::inertia('/login', 'Auth/Login');
+Route::inertia('/home', 'Home');
 
-//Route::post('/login', [AuthController::class,'login']);
+Route::get('/dashboard', [SongController::class, 'index']);//->middleware('auth:sanctum');
 
-/* Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
+Route::inertia('/login', 'Auth/Login')->name('login');
 
-Route::post('/register', [AuthController::class, 'register']); */
+Route::post('/login', [AuthController::class,'login']);
+
+Route::inertia('/register', 'Auth/Register');
+
+/*
+Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
+
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::apiResource('songs', SongController::class)->middleware('auth:sanctum'); */
