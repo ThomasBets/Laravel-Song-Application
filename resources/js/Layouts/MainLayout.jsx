@@ -31,7 +31,7 @@ export default function MainLayout({ children }) {
             {/* Header */}
             <header className="bg-white shadow-md">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                    <Link to="/" className="text-2xl font-bold text-blue-600">
+                    <Link to="/" className="text-2xl font-bold text-indigo-600">
                         🎵 MySongApp
                     </Link>
 
