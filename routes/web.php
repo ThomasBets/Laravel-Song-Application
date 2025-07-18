@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Route;
     return inertia('Home', ['name' => 'Thomas']);
 }); */
 
-Route::inertia("/", 'Welcome');
 
-Route::inertia('/home', 'Home');
+
+Route::inertia('/', 'Home');
 
 Route::get('/dashboard', [SongController::class, 'index']);//->middleware('auth:sanctum');
 

@@ -36,7 +36,7 @@ export default function Login() {
                 setMessage("Login successful!");
                 localStorage.setItem("token", data.token);
                 setToken(data.token);
-                router.visit("/home");
+                router.visit("/");
             } else if (response.status === 422) {
                 setErrors(data.errors || {});
             } else {
@@ -50,18 +50,18 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex items-center justify-center">
             <form
                 onSubmit={handleLogin}
-                className="bg-white p-6 rounded shadow-md w-full max-w-sm"
+                className="bg-gradient-to-b from-neutral-600 to-neutral-800 p-6 rounded shadow-md w-full max-w-sm"
             >
-                <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+                <h2 className="text-2xl text-violet-300 font-bold text-center mb-6">Login</h2>
 
                 <div className="mb-4">
-                    <label className="block text-gray-700 mb-1">Email</label>
+                    <label className="block text-violet-200 mb-1">Email</label>
                     <input
                         type="email"
-                        className="w-full p-2 border border-gray-300 rounded"
+                        className="w-full p-2 border text-violet-200 border-violet-200 rounded placeholder-violet-200"
                         placeholder="you@example.com"
                         value={formData.email}
                         onChange={(e) =>
@@ -76,10 +76,10 @@ export default function Login() {
                 </div>
 
                 <div className="mb-4">
-                    <label className="block text-gray-700 mb-1">Password</label>
+                    <label className="block text-violet-200 mb-1">Password</label>
                     <input
                         type="password"
-                        className="w-full p-2 border border-gray-300 rounded"
+                        className="w-full p-2 border text-violet-200 border-violet-200 rounded placeholder-violet-200"
                         placeholder="********"
                         value={formData.password}
                         onChange={(e) =>
@@ -98,14 +98,14 @@ export default function Login() {
 
                 <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+                    className="w-full bg-violet-600 text-violet-100 py-2 rounded hover:bg-violet-700"
                 >
                     Login
                 </button>
 
-                <p className="mt-4 text-sm text-center">
+                <p className="mt-4 text-sm text-center text-violet-200">
                     Don't have an account?{" "}
-                    <a href="/register" className="text-blue-500 hover:underline">
+                    <a href="/register" className="text-violet-500 hover:underline">
                         Register
                     </a>
                 </p>
