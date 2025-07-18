@@ -1,14 +1,39 @@
-import { Inertia } from '@inertiajs/inertia';
-//import MainLayout from "@/Layouts/MainLayout";
+import { Link, router } from "@inertiajs/react";
+import { useContext, useState } from "react";
+import { AppContext } from "../../Context/AppContext";
+import MainLayout from "../../Layouts/MainLayout";
 
-export default function Dashboard({ songs}) {
-    console.log({ songs });
+
+export default function Dashboard() {
+
+ const [formData, setFormData] = useState({
+        title: "",
+        description: "",
+        genre: "",
+        release_date: "",
+    });
+
+    const [errors, setErrors] = useState({});
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+    const { token } = useContext(AppContext);
+
+
+async function getSongs() {
+    const res = await fetch("/api/songs");
+    const data = await res.json();
+
+    console.log(data);
+
+
+}
+
 
     return (
         <>
             <h1 className="text-4xl text-center font-bold mb-8">List of Songs!</h1>
 
-            <div>
+            {/* <div>
                 {songs?.data?.length > 0 ? (
                     songs.data.map((song) => (
                         <div key={song.id} className="p-2">
@@ -39,9 +64,9 @@ export default function Dashboard({ songs}) {
                         )
                     )}
                 </div>
-            </div>
+            </div> */}
         </>
     );
 }
 
-//Dashboard.layout = (page) => <MainLayout>{page}</MainLayout>;
+Dashboard.layout = (page) => <MainLayout>{page}</MainLayout>;

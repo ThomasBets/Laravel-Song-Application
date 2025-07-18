@@ -19,13 +19,13 @@ class SongController extends Controller
     public function index(Request $request)
     {
         /** @var \App\Models\User $user */
-        //$user = Auth::user();
+        $user = Auth::user();
 
         $query = Song::query();
 
-        /* if ($user->isRegularUser()) {                                   //Checking the users' role using of the helper 'isRegularUser' that is defined at the User Model
+        if ($user->isRegularUser()) {                                   //Checking the users' role using of the helper 'isRegularUser' that is defined at the User Model
             $query->where('user_id', $user->id);
-        } */
+        }
 
         if ($request->has('genre')) {
             $query->where('genre', $request->input('genre'));
@@ -34,17 +34,7 @@ class SongController extends Controller
         $sort = $request->input('sort', 'desc');
         $songs = $query->orderBy('release_date', $sort)->paginate(100);
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'songs' => $songs,
-               // 'user' => $request->user(),
-            ]);
-        }
-
-        return inertia('Songs/Dashboard', [
-            'songs' => $songs,
-            //'authUser' => $request->user(),
-        ]);
+        return $songs;
     }
 
     // Validate using the required restrictions and create a new song for the authenticated user.
@@ -65,7 +55,10 @@ class SongController extends Controller
             ]),
             'user_id' => $user->id
         ]);
-        return $song;
+        return [
+            'song' => $song,
+            'user' => $song->user,
+        ];
     }
 
     // Show details of a specific song after authorization.
@@ -73,7 +66,10 @@ class SongController extends Controller
     {
         $this->authorize('view', $song);
 
-        return $song;
+        return [
+            'song' => $song,
+            'user' => $song->user,
+        ];
     }
 
     // Validate and update the given song if the user is authorized.
@@ -90,10 +86,10 @@ class SongController extends Controller
 
         $song->update($validated);
 
-        return response()->json([
-            'message' => 'Song updated successfully!',
-            'data' => $song
-        ]);
+        return [
+            'song' => $song,
+            'user' => $song->user,
+        ];
     }
 
     // Delete the specified song after checking permissions.

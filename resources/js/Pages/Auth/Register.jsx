@@ -91,8 +91,15 @@ export default function Register() {
                         <option className="text-violet-200" value="" disabled>
                             Select a role
                         </option>
-                        <option className="text-violet-200" value="admin">Admin</option>
-                        <option className="text-violet-200" value="regular_user">Regular User</option>
+                        <option className="text-violet-200" value="admin">
+                            Admin
+                        </option>
+                        <option
+                            className="text-violet-200"
+                            value="regular_user"
+                        >
+                            Regular User
+                        </option>
                     </select>
                     {errors.role && (
                         <p className="text-red-600 text-sm">{errors.role[0]}</p>
@@ -118,7 +125,9 @@ export default function Register() {
                 </div>
 
                 <div className="mb-4">
-                    <label className="block text-violet-200 mb-1">Password</label>
+                    <label className="block text-violet-200 mb-1">
+                        Password
+                    </label>
                     <input
                         type="password"
                         className="w-full p-2 border text-violet-200 border-violet-200 rounded placeholder-violet-200"
@@ -165,7 +174,10 @@ export default function Register() {
 
                 <p className="mt-4 text-sm text-center text-violet-200">
                     Already have an account?{" "}
-                    <a href="/login" className="text-violet-500 hover:underline">
+                    <a
+                        href="/login"
+                        className="text-violet-500 hover:underline"
+                    >
                         Login
                     </a>
                 </p>
