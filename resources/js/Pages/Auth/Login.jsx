@@ -69,7 +69,7 @@ export default function Login() {
                         }
                     />
                     {errors.email && (
-                        <p className="text-red-600 text-sm">
+                        <p className="text-red-500 text-sm">
                             {errors.email[0]}
                         </p>
                     )}
@@ -90,7 +90,7 @@ export default function Login() {
                         }
                     />
                     {errors.password && (
-                        <p className="text-red-600 text-sm">
+                        <p className="text-red-500 text-sm">
                             {errors.password[0]}
                         </p>
                     )}

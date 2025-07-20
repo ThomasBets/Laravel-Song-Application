@@ -23,19 +23,19 @@ export default function MainLayout({ header, main }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-900">
-      <header className="h-18 bg-gradient-to-r from-gray-900 via-purple-900 to-gray-900 shadow-[0_4px_10px_rgba(139,92,246,0.6)]">
-        <div className="max-w-8xl mx-auto flex justify-between items-center">
-          <div>
-            <span className="text-3xl mr-2">🎧</span>
+      <header className="w-full h-20 bg-gradient-to-r from-gray-900 via-purple-900 to-gray-900 shadow-[0_4px_10px_rgba(139,92,246,0.6)]">
+        <div className=" mx-auto px-6 flex justify-between items-center h-full">
+          <div className="flex items-center space-x-2">
+            <span className="text-5xl mr-2">🎧</span>
             <Link href="/" className="text-2xl font-bold text-violet-500 ">
               MySongApp
             </Link>
           </div>
-          {header}
+          <div className="flex items-center">{header}</div>
         </div>
       </header>
 
-      <main className="flex flex-1 items-center justify-center text-center">
+      <main className="flex flex-1 items-center justify-center text-center px-4">
         {main}
       </main>
 

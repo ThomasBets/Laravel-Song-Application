@@ -18,14 +18,15 @@ class SongController extends Controller
     // List songs, filtered genre with a Query Builder Object, and sorted by release date.
     public function index(Request $request)
     {
+
         /** @var \App\Models\User $user */
-        $user = Auth::user();
+        // $user = Auth::user();
 
         $query = Song::query();
 
-        if ($user->isRegularUser()) {                                   //Checking the users' role using of the helper 'isRegularUser' that is defined at the User Model
+        /* if ($user->isRegularUser()) {                                   //Checking the users' role using of the helper 'isRegularUser' that is defined at the User Model
             $query->where('user_id', $user->id);
-        }
+        } */
 
         if ($request->has('genre')) {
             $query->where('genre', $request->input('genre'));
@@ -34,7 +35,7 @@ class SongController extends Controller
         $sort = $request->input('sort', 'desc');
         $songs = $query->orderBy('release_date', $sort)->paginate(100);
 
-        return $songs;
+        return response()->json($songs);
     }
 
     // Validate using the required restrictions and create a new song for the authenticated user.
