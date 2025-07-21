@@ -31,14 +31,30 @@ export default function Home() {
                     <div className="flex w-full justify-between items-center ml-10">
                         {/* Left side: Links */}
                         <div className="flex space-x-6">
-                            <Link
-                                href="/dashboard"
-                                className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
-                            >
-                                {user.role === "admin"
-                                    ? "All Songs"
-                                    : "My Songs"}
-                            </Link>
+
+                                {user.role === "admin" ? (
+                                    <div className="flex space-x-5">
+                                        <Link
+                                            href="/dashboard"
+                                            className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
+                                        >
+                                            All Songs
+                                        </Link>
+                                        <Link
+                                            href="/dashboard"
+                                            className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
+                                        >
+                                            My Songs
+                                        </Link>
+                                    </div>
+                                ) : (<Link
+                                            href="/dashboard"
+                                            className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
+                                        >
+                                            My Songs
+                                        </Link>
+                                )}
+
                             <Link
                                 href="/store"
                                 className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
@@ -53,24 +69,16 @@ export default function Home() {
                                 Welcome {user.name}
                             </p>
                             <form onSubmit={handleLogout}>
-                                <button className="button">
-                                    Logout
-                                </button>
+                                <button className="button">Logout</button>
                             </form>
                         </div>
                     </div>
                 ) : (
                     <div className="items-center space-x-5">
-                        <Link
-                            href="/login"
-                            className="button"
-                        >
+                        <Link href="/login" className="button">
                             Login
                         </Link>
-                        <Link
-                            href="/register"
-                            className="button"
-                        >
+                        <Link href="/register" className="button">
                             Register
                         </Link>
                     </div>
