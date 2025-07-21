@@ -20,7 +20,7 @@ export default function Create() {
         e.preventDefault();
 
         try {
-            const response = await fetch("/api/songs", {
+            const res = await fetch("/api/songs", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -31,12 +31,12 @@ export default function Create() {
                 body: JSON.stringify(formData),
             });
 
-            const data = await response.json();
+            const data = await res.json();
 
-            if (response.ok) {
+            if (res.ok) {
                 setMessage("Store successful!");
                 router.visit("/");
-            } else if (response.status === 422) {
+            } else if (res.status === 422) {
                 setErrors(data.errors || {});
             } else {
                 setMessage("Something went wrong. Please try again.");
@@ -50,15 +50,19 @@ export default function Create() {
 
     return (
         <MainLayout
-            header={null}
+            header={
+                <button
+                    onClick={() => router.visit("/")}
+                    className="px-4 py-2  button"
+                >
+                    Back
+                </button>
+            }
             main={
                 <div className="min-h-screen flex items-center justify-center w-full">
-                    <form
-                        onSubmit={handleCreate}
-                        className="bg-gradient-to-b from-neutral-600 to-neutral-800 p-6 rounded w-full max-w-sm text-left"
-                    >
+                    <form onSubmit={handleCreate} className="form">
                         <h2 className="text-2xl text-violet-300 font-bold text-center mb-6">
-                            Store a Song
+                            Add a Song
                         </h2>
 
                         <div className="mb-4">
@@ -78,9 +82,7 @@ export default function Create() {
                                 }
                             />
                             {errors.title && (
-                                <p className="text-red-500 text-sm">
-                                    {errors.title[0]}
-                                </p>
+                                <p className="error">{errors.title[0]}</p>
                             )}
                         </div>
 
@@ -101,50 +103,67 @@ export default function Create() {
                                 }
                             />
                             {errors.description && (
-                                <p className="text-red-500 text-sm">
-                                    {errors.description[0]}
-                                </p>
+                                <p className="error">{errors.description[0]}</p>
                             )}
                         </div>
 
                         <div className="mb-6">
-                            <label className="block text-violet-200 mb-1">Genre</label>
+                            <label className="block text-violet-200 mb-1">
+                                Genre
+                            </label>
                             <select
                                 className="w-full p-2 border bg-neutral-700 text-violet-200 border-violet-200 rounded placeholder-violet-200"
                                 value={formData.genre}
                                 onChange={(e) =>
-                                    setFormData({ ...formData, genre: e.target.value })
+                                    setFormData({
+                                        ...formData,
+                                        genre: e.target.value,
+                                    })
                                 }
                             >
-                                <option className="text-violet-200" value="" disabled>
+                                <option
+                                    className="text-violet-200"
+                                    value=""
+                                    disabled
+                                >
                                     Select a Genre
                                 </option>
-                                <option className="text-violet-200" value="Classical">
+                                <option
+                                    className="text-violet-200"
+                                    value="Classical"
+                                >
                                     Classical
                                 </option>
-                                <option
-                                    className="text-violet-200" value="Pop">
+                                <option className="text-violet-200" value="Pop">
                                     Pop
                                 </option>
                                 <option
-                                    className="text-violet-200" value="Rock">
+                                    className="text-violet-200"
+                                    value="Rock"
+                                >
                                     Rock
                                 </option>
                                 <option
-                                    className="text-violet-200" value="Hip-hop">
+                                    className="text-violet-200"
+                                    value="Hip-hop"
+                                >
                                     Hip-Hop
                                 </option>
                                 <option
-                                    className="text-violet-200" value="Electronic">
+                                    className="text-violet-200"
+                                    value="Electronic"
+                                >
                                     Electronic
                                 </option>
                                 <option
-                                    className="text-violet-200" value="Jazz">
+                                    className="text-violet-200"
+                                    value="Jazz"
+                                >
                                     Jazz
                                 </option>
                             </select>
                             {errors.genre && (
-                                <p className="text-red-500 text-sm">{errors.genre[0]}</p>
+                                <p className="error">{errors.genre[0]}</p>
                             )}
                         </div>
 
@@ -164,23 +183,18 @@ export default function Create() {
                                 }
                             />
                             {errors.release_date && (
-                                <p className="text-red-500 text-sm">
+                                <p className="error">
                                     {errors.release_date[0]}
                                 </p>
                             )}
                         </div>
 
-                        <button
-                            type="submit"
-                            className="w-full bg-violet-600 text-violet-100 py-2 rounded hover:bg-violet-700"
-                        >
+                        <button type="submit" className="w-full button">
                             Store
                         </button>
                     </form>
                 </div>
-
             }
         />
     );
 }
-

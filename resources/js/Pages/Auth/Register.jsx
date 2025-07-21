@@ -57,7 +57,7 @@ export default function Register() {
         <div className="min-h-screen flex items-center justify-center">
             <form
                 onSubmit={handleRegister}
-                className="bg-gradient-to-b from-neutral-600 to-neutral-800 p-6 rounded w-full max-w-sm"
+                className="form"
             >
                 <h2 className="text-2xl text-violet-300 font-bold text-center mb-6">
                     Register
@@ -75,7 +75,7 @@ export default function Register() {
                         }
                     />
                     {errors.name && (
-                        <p className="text-red-500 text-sm">{errors.name[0]}</p>
+                        <p className="error">{errors.name[0]}</p>
                     )}
                 </div>
 
@@ -102,7 +102,7 @@ export default function Register() {
                         </option>
                     </select>
                     {errors.role && (
-                        <p className="text-red-500 text-sm">{errors.role[0]}</p>
+                        <p className="error">{errors.role[0]}</p>
                     )}
                 </div>
 
@@ -118,7 +118,7 @@ export default function Register() {
                         }
                     />
                     {errors.email && (
-                        <p className="text-red-500 text-sm">
+                        <p className="error">
                             {errors.email[0]}
                         </p>
                     )}
@@ -141,7 +141,7 @@ export default function Register() {
                         }
                     />
                     {errors.password && (
-                        <p className="text-red-500 text-sm">
+                        <p className="error">
                             {errors.password[0]}
                         </p>
                     )}
@@ -167,7 +167,7 @@ export default function Register() {
 
                 <button
                     type="submit"
-                    className="w-full bg-violet-600 text-violet-100 py-2 rounded hover:bg-violet-700"
+                    className="w-full button"
                 >
                     Register
                 </button>

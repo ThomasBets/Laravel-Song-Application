@@ -1,5 +1,6 @@
 import "./bootstrap";
 import "../css/app.css";
+import '../css/style.css';
 import axios from "axios";
 import AppProvider from "./Context/AppContext";
 import { createInertiaApp } from "@inertiajs/react";

@@ -53,7 +53,7 @@ export default function Login() {
         <div className="min-h-screen flex items-center justify-center">
             <form
                 onSubmit={handleLogin}
-                className="bg-gradient-to-b from-neutral-600 to-neutral-800 p-6 rounded shadow-md w-full max-w-sm"
+                className="form"
             >
                 <h2 className="text-2xl text-violet-300 font-bold text-center mb-6">Login</h2>
 
@@ -69,7 +69,7 @@ export default function Login() {
                         }
                     />
                     {errors.email && (
-                        <p className="text-red-500 text-sm">
+                        <p className="error">
                             {errors.email[0]}
                         </p>
                     )}
@@ -90,7 +90,7 @@ export default function Login() {
                         }
                     />
                     {errors.password && (
-                        <p className="text-red-500 text-sm">
+                        <p className="error">
                             {errors.password[0]}
                         </p>
                     )}
@@ -98,7 +98,7 @@ export default function Login() {
 
                 <button
                     type="submit"
-                    className="w-full bg-violet-600 text-violet-100 py-2 rounded hover:bg-violet-700"
+                    className="w-full button"
                 >
                     Login
                 </button>
