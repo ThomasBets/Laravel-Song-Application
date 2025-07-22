@@ -90,9 +90,10 @@ export default function Create() {
                             <label className="block text-violet-200 mb-1">
                                 Description
                             </label>
-                            <input
+                            <textarea
                                 type="text"
                                 className="w-full p-2 border text-violet-200 border-violet-200 rounded placeholder-violet-200"
+                                rows = "3"
                                 placeholder="Led Zeppelin (1971)"
                                 value={formData.description}
                                 onChange={(e) =>

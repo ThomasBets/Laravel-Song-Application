@@ -1,10 +1,13 @@
 import MainLayout from "../../Layouts/MainLayout";
-import { router } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { AppContext } from "../../Context/AppContext";
 import { useContext, useEffect, useState } from "react";
 
 export default function Edit() {
-    const { currentSong, token } = useContext(AppContext);
+    const { token } = useContext(AppContext);
+    const { url } = usePage();
+    const segments = url.split("/").filter(Boolean);
+    const id = segments[segments.length - 2];
 
     const [formData, setFormData] = useState({
         title: "",
@@ -17,24 +20,43 @@ export default function Edit() {
     const [message, setMessage] = useState("");
     const [errors, setErrors] = useState({});
 
-    // Sync formData when currentSong is available
+    // Fetch song by ID
     useEffect(() => {
-        if (currentSong) {
-            setFormData({
-                title: currentSong.title || "",
-                description: currentSong.description || "",
-                genre: currentSong.genre || "",
-                release_date: currentSong.release_date || "",
-            });
-            setLoading(false);
+        async function fetchSong() {
+            try {
+                const res = await fetch(`/api/songs/${id}`, {
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!res.ok) throw new Error("Failed to fetch song");
+
+                const data = await res.json();
+                const song = data.song;
+
+                setFormData({
+                    title: song.title || "",
+                    description: song.description || "",
+                    genre: song.genre || "",
+                    release_date: song.release_date || "",
+                });
+            } catch (err) {
+                setMessage(err.message);
+            } finally {
+                setLoading(false);
+            }
         }
-    }, [currentSong]);
+
+        fetchSong();
+    }, [id, token]);
 
     async function handleEdit(e) {
         e.preventDefault();
 
         try {
-            const res = await fetch(`/api/songs/${currentSong.id}`, {
+            const res = await fetch(`/api/songs/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -48,7 +70,7 @@ export default function Edit() {
 
             if (res.ok) {
                 setMessage("Update successful!");
-                router.visit(`/songs/${currentSong.id}`);
+                window.history.back();
             } else if (res.status === 422) {
                 setErrors(data.errors || {});
             } else {
@@ -63,7 +85,7 @@ export default function Edit() {
         <MainLayout
             header={
                 <button
-                    onClick={() => router.visit('/dashboard')}
+                    onClick={() => window.history.back()}
                     className="button"
                 >
                     Back
@@ -80,7 +102,9 @@ export default function Edit() {
                             </h2>
 
                             {message && (
-                                <p className="text-violet-300 mb-4">{message}</p>
+                                <p className="text-violet-300 mb-4">
+                                    {message}
+                                </p>
                             )}
 
                             {/* Title */}
@@ -109,10 +133,10 @@ export default function Edit() {
                                 <label className="block text-violet-200 mb-1">
                                     Description
                                 </label>
-                                <input
+                                <textarea
                                     type="text"
                                     className="w-full p-2 border text-violet-200 border-violet-200 rounded placeholder-violet-200"
-                                    placeholder="Led Zeppelin (1971)"
+                                    rows="3"
                                     value={formData.description}
                                     onChange={(e) =>
                                         setFormData({
@@ -122,7 +146,9 @@ export default function Edit() {
                                     }
                                 />
                                 {errors.description && (
-                                    <p className="error">{errors.description[0]}</p>
+                                    <p className="error">
+                                        {errors.description[0]}
+                                    </p>
                                 )}
                             </div>
 
@@ -141,12 +167,16 @@ export default function Edit() {
                                         })
                                     }
                                 >
-                                    <option value="" disabled>Select a Genre</option>
+                                    <option value="" disabled>
+                                        Select a Genre
+                                    </option>
                                     <option value="Classical">Classical</option>
                                     <option value="Pop">Pop</option>
                                     <option value="Rock">Rock</option>
                                     <option value="Hip-hop">Hip-Hop</option>
-                                    <option value="Electronic">Electronic</option>
+                                    <option value="Electronic">
+                                        Electronic
+                                    </option>
                                     <option value="Jazz">Jazz</option>
                                 </select>
                                 {errors.genre && (

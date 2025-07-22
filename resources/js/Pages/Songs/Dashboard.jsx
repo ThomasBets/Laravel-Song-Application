@@ -64,7 +64,7 @@ export default function Dashboard() {
             });
 
             if (res.ok) {
-                router.visit("/dashboard");
+                router.visit(`/dashboard?view=${view}`);
             } else {
                 const data = await res.json();
                 setErrors(data.message || "Failed to delete the song.");
