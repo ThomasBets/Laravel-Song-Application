@@ -27,7 +27,7 @@ export default function MainLayout({ header, main }) {
         <div className=" mx-auto px-6 flex justify-between items-center h-full">
           <div className="flex items-center space-x-2">
             <span className="text-4xl mr-2">🎧</span>
-            <Link href="/" className="text-2xl font-bold text-violet-500 ">
+            <Link href="/" className="text-2xl fancy_text">
               MySongApp
             </Link>
           </div>

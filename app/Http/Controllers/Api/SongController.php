@@ -23,19 +23,48 @@ class SongController extends Controller
         $user = Auth::user();
 
         $query = Song::query();
-
-        if ($user->isRegularUser()) {                                   //Checking the users' role using of the helper 'isRegularUser' that is defined at the User Model
-            $query->where('user_id', $user->id);
-        }
-
-        if ($request->has('genre')) {
-            $query->where('genre', $request->input('genre'));
-        }
-
+        $view = $request->input('view', 'mysongs');
         $sort = $request->input('sort', 'desc');
-        $songs = $query->orderBy('release_date', $sort)->paginate(50);
 
-        return response()->json($songs);
+
+        //Checking the users' role using of the helper 'isAdmin' that is defined at the User Model
+        if ($user->isAdmin()) {
+            if ($view == 'allsongs') {
+
+                if ($request->has('genre')) {
+                    $query->where(
+                        'genre',
+                        $request->input('genre')
+                    );
+                }
+            } else {
+                $query->where('user_id', $user->id);
+
+                if ($request->has('genre')) {
+                    $query->where(
+                        'genre',
+                        $request->input('genre')
+                    );
+                }
+            }
+        } else {
+            $query->where('user_id', $user->id);
+
+            if ($request->has('genre')) {
+                $query->where(
+                    'genre',
+                    $request->input('genre')
+                );
+            }
+        }
+
+        $songs = $query->orderBy('release_date', $sort)->paginate(50);
+        $songs->appends($request->except('page'));
+
+        return response()->json([
+            'songs' => $songs,
+            'view' => $view,
+        ]);
     }
 
     // Validate using the required restrictions and create a new song for the authenticated user.

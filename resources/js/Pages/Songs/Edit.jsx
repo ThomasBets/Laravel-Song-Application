@@ -63,7 +63,7 @@ export default function Edit() {
         <MainLayout
             header={
                 <button
-                    onClick={() => router.visit(`/songs/${currentSong?.id}`)}
+                    onClick={() => router.visit('/dashboard')}
                     className="button"
                 >
                     Back

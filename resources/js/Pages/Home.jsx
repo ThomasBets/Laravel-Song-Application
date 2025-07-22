@@ -28,32 +28,32 @@ export default function Home() {
         <MainLayout
             header={
                 user ? (
-                    <div className="flex w-full justify-between items-center ml-10">
+                    <div className="flex w-full justify-between items-center ml-12">
                         {/* Left side: Links */}
-                        <div className="flex space-x-6">
-
-                                {user.role === "admin" ? (
-                                    <div className="flex space-x-5">
-                                        <Link
-                                            href="/dashboard"
-                                            className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
-                                        >
-                                            All Songs
-                                        </Link>
-                                        <Link
-                                            href="/dashboard"
-                                            className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
-                                        >
-                                            My Songs
-                                        </Link>
-                                    </div>
-                                ) : (<Link
-                                            href="/dashboard"
-                                            className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
-                                        >
-                                            My Songs
-                                        </Link>
-                                )}
+                        <div className="flex space-x-8">
+                            {user.role === "admin" ? (
+                                <div className="flex space-x-8">
+                                    <Link
+                                        href="/dashboard?view=allsongs"
+                                        className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
+                                    >
+                                        All Songs
+                                    </Link>
+                                    <Link
+                                        href="/dashboard?view=mysongs"
+                                        className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
+                                    >
+                                        My Songs
+                                    </Link>
+                                </div>
+                            ) : (
+                                <Link
+                                    href="/dashboard?view=mysongs"
+                                    className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
+                                >
+                                    My Songs
+                                </Link>
+                            )}
 
                             <Link
                                 href="/store"
@@ -63,7 +63,6 @@ export default function Home() {
                             </Link>
                         </div>
 
-                        {/* Right side: Welcome + Logout */}
                         <div className="flex items-center space-x-4">
                             <p className="text-violet-300">
                                 Welcome {user.name}
@@ -86,7 +85,8 @@ export default function Home() {
             }
             main={
                 <div>
-                    <p className="text-3xl text-violet-400">
+
+                    <p className="text-3xl fancy_text">
                         Discover and share your favorite songs!
                     </p>
                 </div>

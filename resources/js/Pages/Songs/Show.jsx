@@ -58,7 +58,6 @@ export default function Show() {
         }
     }
 
-
     return (
         <MainLayout
             header={
@@ -70,44 +69,27 @@ export default function Show() {
                 </button>
             }
             main={
-                <div className="p-6">
+                <div className="p-6 text-neutral-900">
                     {loading && <p>Loading...</p>}
 
                     {errors && <p className="errors">{errors}</p>}
 
                     {!loading && !errors && currentSong && (
                         <>
-                            <h1 className="text-2xl font-bold text-violet-400 mb-4">
-                                {currentSong.title}
+                            <h1 className="text-lg font-bold text-violet-400 mb-8">
+                                Title: {currentSong.title}
                             </h1>
-                            <p className="text-lg font-bold text-violet-400 mb-4">
+                            <p className="text-lg font-bold text-violet-400 mb-8">
                                 Description:{" "}
                                 {currentSong.description ??
                                     "No description available."}
                             </p>
-                            <p className="text-lg font-bold text-violet-400 mb-4">
+                            <p className="text-lg font-bold text-violet-400 mb-8">
                                 Genre: {currentSong.genre}
                             </p>
                             <p className="text-lg font-bold text-violet-400">
                                 Release Date: {currentSong.release_date}
                             </p>
-
-                            <div className="space-x-10 mt-7">
-                                <button
-                                    onClick={() =>
-                                        router.visit(`/songs/${id}/edit`)
-                                    }
-                                    className="button"
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    onClick={(handleDelete)}
-                                    className="button"
-                                >
-                                    Delete
-                                </button>
-                            </div>
                         </>
                     )}
                 </div>

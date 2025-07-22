@@ -8,7 +8,7 @@ export default function AuthLayout({ children }) {
                     <span className="text-4xl mr-2">🎧</span>
                     <Link
                         href="/"
-                        className="text-2xl font-bold text-violet-500"
+                        className="text-2xl fancy_text"
                     >
                         MySongApp
                     </Link>
