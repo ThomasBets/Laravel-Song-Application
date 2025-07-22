@@ -63,9 +63,9 @@ export default function Home() {
                             </Link>
                         </div>
 
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-6">
                             <p className="text-violet-300">
-                                Welcome {user.name}
+                                {user.name}
                             </p>
                             <form onSubmit={handleLogout}>
                                 <button className="button">Logout</button>
