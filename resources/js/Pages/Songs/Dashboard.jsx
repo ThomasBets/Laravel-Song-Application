@@ -280,12 +280,15 @@ export default function Dashboard() {
                                                             {song.release_date}
                                                         </td>
                                                         <td className="px-4 py-3 space-x-4">
-                                                            <Link
-                                                                href={`/songs/${song.id}/edit`}
-                                                                className="text-violet-300 hover:underline"
-                                                            >
-                                                                Edit
-                                                            </Link>
+                                                            {view ===
+                                                                "mysongs" && (
+                                                                <Link
+                                                                    href={`/songs/${song.id}/edit`}
+                                                                    className="text-violet-300 hover:underline"
+                                                                >
+                                                                    Edit
+                                                                </Link>
+                                                            )}
                                                             <button
                                                                 onClick={() =>
                                                                     handleDelete(
