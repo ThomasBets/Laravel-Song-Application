@@ -74,9 +74,9 @@ export default function Register() {
 
                 {/* Show loading indicator while registering */}
                 {loading && (
-                    <p className="text-violet-400 text-center mb-4">
-                        Registering...
-                    </p>
+                    <div className="flex justify-center my-6">
+                        <div className="loader ease-linear rounded-full border-4 border-t-4 border-violet-400 h-8 w-8"></div>
+                    </div>
                 )}
 
                 {/* Name Field */}
@@ -177,11 +177,8 @@ export default function Register() {
                 </div>
 
                 {/* Submit Button */}
-                <button
-                    type="submit"
-                    className="w-full button"
-                >
-                     Register
+                <button type="submit" className="w-full button">
+                    Register
                 </button>
 
                 {/* Navigation link */}

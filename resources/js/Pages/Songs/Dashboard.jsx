@@ -7,21 +7,17 @@ export default function Dashboard() {
     const { token } = useContext(AppContext);
     const { url } = usePage();
 
-    // Extract the "view" query parameter from the URL (default to "mysongs")
     const view =
         new URLSearchParams(url.split("?")[1]).get("view") || "mysongs";
 
-    // State for song data error
     const [songsData, setSongsData] = useState({ data: [], links: [] });
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-
     const [showGenreMenu, setShowGenreMenu] = useState(false);
     const [selectedGenre, setSelectedGenre] = useState("");
     const [noSongsMessage, setNoSongsMessage] = useState("");
     const [sortDirection, setSortDirection] = useState("desc");
 
-    // Fetch songs from API
     async function fetchSongs(fetchUrl) {
         setError(null);
         setNoSongsMessage("");
@@ -40,9 +36,11 @@ export default function Dashboard() {
             if (!res.ok)
                 throw new Error(data.message || "Failed to fetch songs");
 
-            if (data.songs.data.length === 0 && selectedGenre) {
+            if (data.songs.data.length === 0) {
                 setNoSongsMessage(
-                    `No songs found for genre "${selectedGenre}"`
+                    selectedGenre
+                        ? `No songs found for genre "${selectedGenre}"`
+                        : "No songs found."
                 );
             }
 
@@ -54,7 +52,6 @@ export default function Dashboard() {
         }
     }
 
-    // Fetch songs whenever view, genre, or sort direction changes
     useEffect(() => {
         const params = new URLSearchParams();
         params.set("view", view);
@@ -64,7 +61,6 @@ export default function Dashboard() {
         fetchSongs(`/api/songs?${params.toString()}`);
     }, [view, selectedGenre, sortDirection]);
 
-    // Handle delete song action
     async function handleDelete(id) {
         if (!confirm("Are you sure you want to delete this song?")) return;
 
@@ -88,13 +84,11 @@ export default function Dashboard() {
         }
     }
 
-    // Called when a pagination link is clicked
     function handlePageClick(pageUrl) {
         if (!pageUrl) return;
         fetchSongs(pageUrl);
     }
 
-    // Pagination component
     function Pagination({ links, onPageClick }) {
         if (!links) return null;
         return (
@@ -118,7 +112,6 @@ export default function Dashboard() {
         );
     }
 
-    // Render layout and main content
     return (
         <MainLayout
             header={
@@ -137,181 +130,197 @@ export default function Dashboard() {
                     ) : (
                         !error && (
                             <>
-                                {/* Table and filter controls */}
-                                <div className="overflow-x-auto">
-                                    <table className="text-left w-full">
-                                        <thead className="bg-gray-800 text-violet-400 uppercase text-sm">
-                                            <tr>
-                                                <th className="px-4 py-4">
-                                                    Title
-                                                </th>
-                                                <th className=" px-4 py-3 text-left text-sm">
-                                                    <button
-                                                        onClick={() =>
-                                                            setShowGenreMenu(
-                                                                !showGenreMenu
-                                                            )
-                                                        }
-                                                        className="flex items-center gap-1 text-violet-400 uppercase"
-                                                    >
-                                                        Genre
-                                                        <svg
-                                                            className="w-4 h-4 transform transition-transform duration-200"
-                                                            style={{
-                                                                transform:
-                                                                    showGenreMenu
-                                                                        ? "rotate(180deg)"
-                                                                        : "rotate(0deg)",
-                                                            }}
-                                                            fill="currentColor"
-                                                            viewBox="0 0 20 20"
-                                                        >
-                                                            <path
-                                                                fillRule="evenodd"
-                                                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 011.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                                                clipRule="evenodd"
-                                                            />
-                                                        </svg>
-                                                    </button>
-
-                                                    {/* Genre dropdown menu */}
-                                                    {showGenreMenu && (
-                                                        <ul className="absolute mt-2 bg-gray-800 text-violet-200 w-28 normal-case z-10 max-h-60 overflow-y-auto rounded shadow-md">
-                                                            {[
-                                                                "All",
-                                                                "Rock",
-                                                                "Pop",
-                                                                "Jazz",
-                                                                "Classical",
-                                                                "Electronic",
-                                                                "Hip-hop",
-                                                            ].map((genre) => (
-                                                                <li
-                                                                    key={genre}
-                                                                    onClick={() => {
-                                                                        setSelectedGenre(
-                                                                            genre ===
-                                                                                "All"
-                                                                                ? ""
-                                                                                : genre
-                                                                        );
-                                                                        setShowGenreMenu(
-                                                                            false
-                                                                        );
-                                                                    }}
-                                                                    className={`px-4 py-2 cursor-pointer hover:bg-violet-500 ${
-                                                                        selectedGenre ===
-                                                                            genre ||
-                                                                        (genre ===
-                                                                            "All" &&
-                                                                            selectedGenre ===
-                                                                                "")
-                                                                            ? "bg-violet-600"
-                                                                            : ""
-                                                                    }`}
-                                                                >
-                                                                    {genre}
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    )}
-                                                </th>
-                                                <th className="px-4 py-3">
-                                                    {/* Sort button */}
-                                                    <button
-                                                        onClick={() => {
-                                                            setSortDirection(
-                                                                (prev) =>
-                                                                    prev ===
-                                                                    "asc"
-                                                                        ? "desc"
-                                                                        : "asc"
-                                                            );
-                                                        }}
-                                                        className="flex items-center gap-1 text-violet-400 uppercase"
-                                                    >
-                                                        Release Date
-                                                        <svg
-                                                            className={`w-4 h-4 transform transition-transform duration-200 ${
-                                                                sortDirection ===
-                                                                "asc"
-                                                                    ? "rotate-180"
-                                                                    : ""
-                                                            }`}
-                                                            fill="currentColor"
-                                                            viewBox="0 0 20 20"
-                                                        >
-                                                            <path
-                                                                fillRule="evenodd"
-                                                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 011.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                                                clipRule="evenodd"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </th>
-                                                <th className="px-4 py-3"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="bg-gradient-to-b from-neutral-600 to-neutral-800 divide-y divide-gray-700">
-                                            {songsData.data.length === 0 ? (
-                                                <tr>
-                                                    <td
-                                                        colSpan={4}
-                                                        className="px-4 py-6 text-center text-violet-400 italic"
-                                                    >
-                                                        {noSongsMessage}
-                                                    </td>
-                                                </tr>
-                                            ) : (
-                                                songsData.data.map((song) => (
-                                                    <tr key={song.id}>
-                                                        <td className="px-4 py-3">
-                                                            <Link
-                                                                href={`/songs/${song.id}`}
-                                                                className="text-violet-300 hover:underline"
-                                                            >
-                                                                {song.title}
-                                                            </Link>
-                                                        </td>
-                                                        <td className="px-4 py-3 text-violet-300">
-                                                            {song.genre}
-                                                        </td>
-                                                        <td className="px-4 py-3 text-violet-300">
-                                                            {song.release_date}
-                                                        </td>
-                                                        <td className="px-4 py-3 space-x-4">
-                                                            {view ===
-                                                                "mysongs" && (
-                                                                <Link
-                                                                    href={`/songs/${song.id}/edit`}
-                                                                    className="text-violet-300 hover:underline"
-                                                                >
-                                                                    Edit
-                                                                </Link>
-                                                            )}
+                                {songsData.data.length === 0 ? (
+                                    <div className="py-10 text-center text-violet-400 italic text-lg">
+                                        <p>{noSongsMessage}</p>
+                                        {view === "mysongs" && (
+                                            <Link
+                                                href="/store"
+                                                className="mt-4 inline-block text-violet-400 underline"
+                                            >
+                                                Create a new Song!
+                                            </Link>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <>
+                                        {/* Table and filter controls */}
+                                        <div className="overflow-x-auto">
+                                            <table className="text-left w-full">
+                                                <thead className="bg-gray-800 text-violet-400 uppercase text-sm">
+                                                    <tr>
+                                                        <th className="px-4 py-4">
+                                                            Title
+                                                        </th>
+                                                        <th className="px-4 py-3 text-left text-sm">
                                                             <button
                                                                 onClick={() =>
-                                                                    handleDelete(
-                                                                        song.id
+                                                                    setShowGenreMenu(
+                                                                        !showGenreMenu
                                                                     )
                                                                 }
-                                                                className="text-violet-300 hover:underline"
+                                                                className="flex items-center gap-1 text-violet-400 uppercase"
                                                             >
-                                                                Delete
+                                                                Genre
+                                                                <svg
+                                                                    className="w-4 h-4 transform transition-transform duration-200"
+                                                                    style={{
+                                                                        transform:
+                                                                            showGenreMenu
+                                                                                ? "rotate(180deg)"
+                                                                                : "rotate(0deg)",
+                                                                    }}
+                                                                    fill="currentColor"
+                                                                    viewBox="0 0 20 20"
+                                                                >
+                                                                    <path
+                                                                        fillRule="evenodd"
+                                                                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 011.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                                                        clipRule="evenodd"
+                                                                    />
+                                                                </svg>
                                                             </button>
-                                                        </td>
+                                                            {showGenreMenu && (
+                                                                <ul className="absolute mt-2 bg-gray-800 text-violet-200 w-28 normal-case z-10 max-h-60 overflow-y-auto rounded shadow-md">
+                                                                    {[
+                                                                        "All",
+                                                                        "Rock",
+                                                                        "Pop",
+                                                                        "Jazz",
+                                                                        "Classical",
+                                                                        "Electronic",
+                                                                        "Hip-hop",
+                                                                    ].map(
+                                                                        (
+                                                                            genre
+                                                                        ) => (
+                                                                            <li
+                                                                                key={
+                                                                                    genre
+                                                                                }
+                                                                                onClick={() => {
+                                                                                    setSelectedGenre(
+                                                                                        genre ===
+                                                                                            "All"
+                                                                                            ? ""
+                                                                                            : genre
+                                                                                    );
+                                                                                    setShowGenreMenu(
+                                                                                        false
+                                                                                    );
+                                                                                }}
+                                                                                className={`px-4 py-2 cursor-pointer hover:bg-violet-500 ${
+                                                                                    selectedGenre ===
+                                                                                        genre ||
+                                                                                    (genre ===
+                                                                                        "All" &&
+                                                                                        selectedGenre ===
+                                                                                            "")
+                                                                                        ? "bg-violet-600"
+                                                                                        : ""
+                                                                                }`}
+                                                                            >
+                                                                                {
+                                                                                    genre
+                                                                                }
+                                                                            </li>
+                                                                        )
+                                                                    )}
+                                                                </ul>
+                                                            )}
+                                                        </th>
+                                                        <th className="px-4 py-3">
+                                                            <button
+                                                                onClick={() => {
+                                                                    setSortDirection(
+                                                                        (
+                                                                            prev
+                                                                        ) =>
+                                                                            prev ===
+                                                                            "asc"
+                                                                                ? "desc"
+                                                                                : "asc"
+                                                                    );
+                                                                }}
+                                                                className="flex items-center gap-1 text-violet-400 uppercase"
+                                                            >
+                                                                Release Date
+                                                                <svg
+                                                                    className={`w-4 h-4 transform transition-transform duration-200 ${
+                                                                        sortDirection ===
+                                                                        "asc"
+                                                                            ? "rotate-180"
+                                                                            : ""
+                                                                    }`}
+                                                                    fill="currentColor"
+                                                                    viewBox="0 0 20 20"
+                                                                >
+                                                                    <path
+                                                                        fillRule="evenodd"
+                                                                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 011.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                                                        clipRule="evenodd"
+                                                                    />
+                                                                </svg>
+                                                            </button>
+                                                        </th>
+                                                        <th className="px-4 py-3"></th>
                                                     </tr>
-                                                ))
-                                            )}
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                {/* Pagination controls */}
-                                <Pagination
-                                    links={songsData.links}
-                                    onPageClick={handlePageClick}
-                                />
+                                                </thead>
+                                                <tbody className="bg-gradient-to-b from-neutral-600 to-neutral-800 divide-y divide-gray-700">
+                                                    {songsData.data.map(
+                                                        (song) => (
+                                                            <tr key={song.id}>
+                                                                <td className="px-4 py-3">
+                                                                    <Link
+                                                                        href={`/songs/${song.id}`}
+                                                                        className="text-violet-300 hover:underline"
+                                                                    >
+                                                                        {
+                                                                            song.title
+                                                                        }
+                                                                    </Link>
+                                                                </td>
+                                                                <td className="px-4 py-3 text-violet-300">
+                                                                    {song.genre}
+                                                                </td>
+                                                                <td className="px-4 py-3 text-violet-300">
+                                                                    {
+                                                                        song.release_date
+                                                                    }
+                                                                </td>
+                                                                <td className="px-4 py-3 space-x-4">
+                                                                    {view ===
+                                                                        "mysongs" && (
+                                                                        <Link
+                                                                            href={`/songs/${song.id}/edit`}
+                                                                            className="text-violet-300 hover:underline"
+                                                                        >
+                                                                            Edit
+                                                                        </Link>
+                                                                    )}
+                                                                    <button
+                                                                        onClick={() =>
+                                                                            handleDelete(
+                                                                                song.id
+                                                                            )
+                                                                        }
+                                                                        className="text-violet-300 hover:underline"
+                                                                    >
+                                                                        Delete
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <Pagination
+                                            links={songsData.links}
+                                            onPageClick={handlePageClick}
+                                        />
+                                    </>
+                                )}
                             </>
                         )
                     )}

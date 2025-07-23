@@ -72,9 +72,9 @@ export default function Login() {
 
                 {/* Show loading indicator */}
                 {loading && (
-                    <p className="text-violet-400 text-center mb-4">
-                        Logging in...
-                    </p>
+                    <div className="flex justify-center my-6">
+                        <div className="loader ease-linear rounded-full border-4 border-t-4 border-violet-400 h-8 w-8"></div>
+                    </div>
                 )}
 
                 {/* Email input field */}
@@ -117,10 +117,7 @@ export default function Login() {
                 </div>
 
                 {/* Submit button */}
-                <button
-                    type="submit"
-                    className="w-full button"
-                >
+                <button type="submit" className="w-full button">
                     Login
                 </button>
 
