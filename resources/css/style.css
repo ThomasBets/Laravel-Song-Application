@@ -4,6 +4,10 @@
     @apply px-4 py-2 bg-violet-500 hover:bg-gray-700 rounded-lg text-violet-200 transition
 }
 
+.link {
+    @apply text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition
+}
+
 .error {
     @apply text-red-500 text-sm
 }

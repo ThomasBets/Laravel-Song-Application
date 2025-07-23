@@ -41,13 +41,13 @@ export default function Home() {
                                 <div className="flex space-x-8">
                                     <Link
                                         href="/dashboard?view=allsongs"
-                                        className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
+                                        className="link"
                                     >
                                         All Songs
                                     </Link>
                                     <Link
                                         href="/dashboard?view=mysongs"
-                                        className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
+                                        className="link"
                                     >
                                         My Songs
                                     </Link>
@@ -56,7 +56,7 @@ export default function Home() {
                                 // Regular users see only "My Songs"
                                 <Link
                                     href="/dashboard?view=mysongs"
-                                    className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
+                                    className="link"
                                 >
                                     My Songs
                                 </Link>
@@ -65,7 +65,7 @@ export default function Home() {
                             {/* Add song link (visible to all logged-in users) */}
                             <Link
                                 href="/store"
-                                className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
+                                className="link"
                             >
                                 Add a Song
                             </Link>
@@ -73,19 +73,19 @@ export default function Home() {
 
                         {/* User info and logout*/}
                         <div className="flex items-center space-x-6">
-                            <p className="text-violet-300">{user.name}</p>
+                            <p className="text-violet-300 text-xl">{user.name}</p>
                             <form onSubmit={handleLogout}>
-                                <button className="button">Logout</button>
+                                <button className="link">Logout</button>
                             </form>
                         </div>
                     </div>
                 ) : (
                     // If the user is NOT logged in, show login/register buttons
                     <div className="items-center space-x-5">
-                        <Link href="/login" className="button">
+                        <Link href="/login" className="link">
                             Login
                         </Link>
-                        <Link href="/register" className="button">
+                        <Link href="/register" className="link">
                             Register
                         </Link>
                     </div>
