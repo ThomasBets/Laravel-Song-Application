@@ -88,7 +88,7 @@ export default function Edit() {
             header={
                 <button
                     onClick={() => window.history.back()}
-                    className="button"
+                    className="px-4 py-2 link"
                 >
                     Back
                 </button>

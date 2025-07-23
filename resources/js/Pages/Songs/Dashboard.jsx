@@ -115,7 +115,7 @@ export default function Dashboard() {
     return (
         <MainLayout
             header={
-                <button onClick={() => router.visit("/")} className="button">
+                <button onClick={() => router.visit("/")} className="px-4 py-2 link">
                     Back
                 </button>
             }
