@@ -4,6 +4,7 @@ import { AppContext } from "../../Context/AppContext";
 import MainLayout from "../../Layouts/MainLayout";
 
 export default function Create() {
+    // Form state to store input values
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -13,9 +14,9 @@ export default function Create() {
 
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(false);
     const { token } = useContext(AppContext);
 
+    // Handle form submission for creating a new song
     async function handleCreate(e) {
         e.preventDefault();
 
@@ -27,7 +28,6 @@ export default function Create() {
                     Accept: "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-
                 body: JSON.stringify(formData),
             });
 
@@ -35,16 +35,14 @@ export default function Create() {
 
             if (res.ok) {
                 setMessage("Store successful!");
-                router.visit("/");
+                router.visit("/"); // Redirect to homepage after success
             } else if (res.status === 422) {
-                setErrors(data.errors || {});
+                setErrors(data.errors || {}); // Display validation errors
             } else {
                 setMessage("Something went wrong. Please try again.");
             }
         } catch (error) {
             setMessage("Network error. Please check your connection.");
-        } finally {
-            setLoading(false);
         }
     }
 
@@ -65,13 +63,19 @@ export default function Create() {
                             Add a Song
                         </h2>
 
+                        {/* Display any success or error message */}
+                        {message && (
+                            <p className="text-violet-300 mb-4">{message}</p>
+                        )}
+
+                        {/* Title Input */}
                         <div className="mb-4">
                             <label className="block text-violet-200 mb-1">
                                 Title
                             </label>
                             <input
                                 type="text"
-                                className="w-full p-2 border text-violet-200 border-violet-200 rounded placeholder-violet-200"
+                                className="form_field"
                                 placeholder="Stairway to Heaven"
                                 value={formData.title}
                                 onChange={(e) =>
@@ -86,14 +90,14 @@ export default function Create() {
                             )}
                         </div>
 
+                        {/* Description Input */}
                         <div className="mb-4">
                             <label className="block text-violet-200 mb-1">
                                 Description
                             </label>
                             <textarea
-                                type="text"
-                                className="w-full p-2 border text-violet-200 border-violet-200 rounded placeholder-violet-200"
-                                rows = "3"
+                                className="form_field"
+                                rows="3"
                                 placeholder="Led Zeppelin (1971)"
                                 value={formData.description}
                                 onChange={(e) =>
@@ -108,12 +112,13 @@ export default function Create() {
                             )}
                         </div>
 
+                        {/* Genre Select */}
                         <div className="mb-6">
                             <label className="block text-violet-200 mb-1">
                                 Genre
                             </label>
                             <select
-                                className="w-full p-2 border bg-neutral-700 text-violet-200 border-violet-200 rounded placeholder-violet-200"
+                                className="bg-neutral-700 form_field"
                                 value={formData.genre}
                                 onChange={(e) =>
                                     setFormData({
@@ -168,6 +173,7 @@ export default function Create() {
                             )}
                         </div>
 
+                        {/* Release Date Input */}
                         <div className="mb-4">
                             <label className="block text-violet-200 mb-1">
                                 Release date

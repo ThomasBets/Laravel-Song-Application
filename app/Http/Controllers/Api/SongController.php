@@ -15,57 +15,43 @@ class SongController extends Controller
 {
     use AuthorizesRequests;
 
-    // List songs, filtered genre with a Query Builder Object, and sorted by release date.
     public function index(Request $request)
     {
-
         /** @var \App\Models\User $user */
-        $user = Auth::user();
+        $user = Auth::user(); // Get the currently authenticated user
+
+        // Get query parameters from the request with default values
+        $view = $request->input('view', 'mysongs');   // e.g., 'mysongs' or 'allsongs'
+        $genre = $request->input('genre');            // Optional genre filter
+        $sort = $request->input('sort', 'desc');      // Sorting direction for release_date
 
         $query = Song::query();
-        $view = $request->input('view', 'mysongs');
-        $sort = $request->input('sort', 'desc');
 
-
-        //Checking the users' role using of the helper 'isAdmin' that is defined at the User Model
-        if ($user->isAdmin()) {
-            if ($view == 'allsongs') {
-
-                if ($request->has('genre')) {
-                    $query->where(
-                        'genre',
-                        $request->input('genre')
-                    );
-                }
-            } else {
-                $query->where('user_id', $user->id);
-
-                if ($request->has('genre')) {
-                    $query->where(
-                        'genre',
-                        $request->input('genre')
-                    );
-                }
-            }
-        } else {
+        // If the user is not an admin, or the view is not 'allsongs',
+        // limit the query to only the songs created by the current user
+        if (!$user->isAdmin() || $view !== 'allsongs') {
             $query->where('user_id', $user->id);
-
-            if ($request->has('genre')) {
-                $query->where(
-                    'genre',
-                    $request->input('genre')
-                );
-            }
         }
 
+        // If a genre is provided, filter the query to that genre
+        if (!empty($genre)) {
+            $query->where('genre', $genre);
+        }
+
+        // Sort the results by release date (asc or desc) and paginate (50 per page)
         $songs = $query->orderBy('release_date', $sort)->paginate(50);
+
+        // Keep other query parameters (e.g., view, genre, sort) in the pagination links,
+        // but exclude the 'page' param
         $songs->appends($request->except('page'));
 
+        // Return the paginated songs and the selected view as JSON
         return response()->json([
             'songs' => $songs,
             'view' => $view,
         ]);
     }
+
 
     // Validate using the required restrictions and create a new song for the authenticated user.
 

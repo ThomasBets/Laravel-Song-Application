@@ -6,9 +6,12 @@ import { useContext, useEffect, useState } from "react";
 export default function Edit() {
     const { token } = useContext(AppContext);
     const { url } = usePage();
+
+    // Extract the song ID from the URL (second-to-last segment) because the url looks like http://127.0.0.1:8000/songs/{id}/edit and we need the id
     const segments = url.split("/").filter(Boolean);
     const id = segments[segments.length - 2];
 
+    // Initial form state
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -16,11 +19,10 @@ export default function Edit() {
         release_date: "",
     });
 
-    const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
     const [errors, setErrors] = useState({});
 
-    // Fetch song by ID
+    // Fetch the song details when component mounts or when id and token change
     useEffect(() => {
         async function fetchSong() {
             try {
@@ -36,6 +38,7 @@ export default function Edit() {
                 const data = await res.json();
                 const song = data.song;
 
+                // Populate form with existing song data
                 setFormData({
                     title: song.title || "",
                     description: song.description || "",
@@ -43,15 +46,14 @@ export default function Edit() {
                     release_date: song.release_date || "",
                 });
             } catch (err) {
-                setMessage(err.message);
-            } finally {
-                setLoading(false);
+                setMessage(err.message); // Display error if fetch fails
             }
         }
 
         fetchSong();
     }, [id, token]);
 
+    // Handle form submission to update the song
     async function handleEdit(e) {
         e.preventDefault();
 
@@ -72,7 +74,7 @@ export default function Edit() {
                 setMessage("Update successful!");
                 window.history.back();
             } else if (res.status === 422) {
-                setErrors(data.errors || {});
+                setErrors(data.errors || {}); // Show validation errors
             } else {
                 setMessage("Edit is unauthorized for this user!");
             }
@@ -93,28 +95,32 @@ export default function Edit() {
             }
             main={
                 <div className="min-h-screen flex items-center justify-center w-full">
-                    {loading ? (
-                        <p className="text-violet-400">Loading song data...</p>
+                    {/* Show loading indicator if title is not loaded yet */}
+                    {!formData.title && !message ? (
+                        <div className="flex justify-center my-6">
+                            <div className="loader ease-linear rounded-full border-4 border-t-4 border-violet-400 h-8 w-8"></div>
+                        </div>
                     ) : (
                         <form onSubmit={handleEdit} className="form">
                             <h2 className="text-2xl text-violet-300 font-bold text-center mb-6">
                                 Edit a Song
                             </h2>
 
+                            {/* Message display */}
                             {message && (
                                 <p className="text-violet-300 mb-4">
                                     {message}
                                 </p>
                             )}
 
-                            {/* Title */}
+                            {/* Title Field */}
                             <div className="mb-4">
                                 <label className="block text-violet-200 mb-1">
                                     Title
                                 </label>
                                 <input
                                     type="text"
-                                    className="w-full p-2 border text-violet-200 border-violet-200 rounded placeholder-violet-200"
+                                    className="form_field"
                                     value={formData.title}
                                     onChange={(e) =>
                                         setFormData({
@@ -128,14 +134,13 @@ export default function Edit() {
                                 )}
                             </div>
 
-                            {/* Description */}
+                            {/* Description Field */}
                             <div className="mb-4">
                                 <label className="block text-violet-200 mb-1">
                                     Description
                                 </label>
                                 <textarea
-                                    type="text"
-                                    className="w-full p-2 border text-violet-200 border-violet-200 rounded placeholder-violet-200"
+                                    className="form_field"
                                     rows="3"
                                     value={formData.description}
                                     onChange={(e) =>
@@ -152,13 +157,13 @@ export default function Edit() {
                                 )}
                             </div>
 
-                            {/* Genre */}
+                            {/* Genre Field */}
                             <div className="mb-6">
                                 <label className="block text-violet-200 mb-1">
                                     Genre
                                 </label>
                                 <select
-                                    className="w-full p-2 border bg-neutral-700 text-violet-200 border-violet-200 rounded placeholder-violet-200"
+                                    className="bg-neutral-700 form_field"
                                     value={formData.genre}
                                     onChange={(e) =>
                                         setFormData({
@@ -184,7 +189,7 @@ export default function Edit() {
                                 )}
                             </div>
 
-                            {/* Release Date */}
+                            {/* Release Date Field */}
                             <div className="mb-4">
                                 <label className="block text-violet-200 mb-1">
                                     Release date

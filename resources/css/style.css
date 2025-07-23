@@ -8,9 +8,13 @@
     @apply text-red-500 text-sm
 }
 
-.form{
+.form {
     @apply bg-gradient-to-b from-neutral-600 to-neutral-800 p-6 rounded w-full max-w-sm text-left
 }
+.form_field{
+    @apply w-full p-2 border text-violet-200 border-violet-200 rounded placeholder-violet-200
+}
+
 
 .fancy_text {
     @apply font-bold bg-gradient-to-r from-violet-500 to-violet-300 bg-clip-text text-transparent

@@ -7,19 +7,25 @@ export default function Dashboard() {
     const { token } = useContext(AppContext);
     const { url } = usePage();
 
-    // Get ?view=mysongs or ?view=allsongs from URL, default to mysongs
-    const urlParams = new URLSearchParams(url.split("?")[1]);
-    const view = urlParams.get("view") || "mysongs";
+    // Extract the "view" query parameter from the URL (default to "mysongs")
+    const view =
+        new URLSearchParams(url.split("?")[1]).get("view") || "mysongs";
 
-
+    // State for song data error
     const [songsData, setSongsData] = useState({ data: [], links: [] });
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    // Fetch songs based on view & URL (for pagination)
-    async function fetchSongs(fetchUrl = `/api/songs?view=${view}`) {
-        setLoading(true);
+    const [showGenreMenu, setShowGenreMenu] = useState(false);
+    const [selectedGenre, setSelectedGenre] = useState("");
+    const [noSongsMessage, setNoSongsMessage] = useState("");
+    const [sortDirection, setSortDirection] = useState("desc");
+
+    // Fetch songs from API
+    async function fetchSongs(fetchUrl) {
         setError(null);
+        setNoSongsMessage("");
+        setLoading(true);
 
         try {
             const res = await fetch(fetchUrl, {
@@ -34,6 +40,12 @@ export default function Dashboard() {
             if (!res.ok)
                 throw new Error(data.message || "Failed to fetch songs");
 
+            if (data.songs.data.length === 0 && selectedGenre) {
+                setNoSongsMessage(
+                    `No songs found for genre "${selectedGenre}"`
+                );
+            }
+
             setSongsData(data.songs);
         } catch (err) {
             setError(err.message);
@@ -42,15 +54,17 @@ export default function Dashboard() {
         }
     }
 
+    // Fetch songs whenever view, genre, or sort direction changes
     useEffect(() => {
-        fetchSongs();
-    }, [view]);
+        const params = new URLSearchParams();
+        params.set("view", view);
+        if (selectedGenre) params.set("genre", selectedGenre);
+        params.set("sort", sortDirection);
 
-    function handlePageClick(pageUrl) {
-        if (!pageUrl) return;
-        fetchSongs(pageUrl);
-    }
+        fetchSongs(`/api/songs?${params.toString()}`);
+    }, [view, selectedGenre, sortDirection]);
 
+    // Handle delete song action
     async function handleDelete(id) {
         if (!confirm("Are you sure you want to delete this song?")) return;
 
@@ -67,13 +81,20 @@ export default function Dashboard() {
                 router.visit(`/dashboard?view=${view}`);
             } else {
                 const data = await res.json();
-                setErrors(data.message || "Failed to delete the song.");
+                setError(data.message || "Failed to delete the song.");
             }
         } catch (error) {
-            setErrors("Network error. Please try again.");
+            setError("Network error. Please try again.");
         }
     }
 
+    // Called when a pagination link is clicked
+    function handlePageClick(pageUrl) {
+        if (!pageUrl) return;
+        fetchSongs(pageUrl);
+    }
+
+    // Pagination component
     function Pagination({ links, onPageClick }) {
         if (!links) return null;
         return (
@@ -84,7 +105,6 @@ export default function Dashboard() {
                         disabled={!link.url}
                         onClick={async () => {
                             await onPageClick(link.url);
-                            window.scrollTo({ top: 0, behavior: "smooth" });
                         }}
                         dangerouslySetInnerHTML={{ __html: link.label }}
                         className={`px-3 py-1 rounded border text-sm transition-all duration-200 ${
@@ -98,6 +118,7 @@ export default function Dashboard() {
         );
     }
 
+    // Render layout and main content
     return (
         <MainLayout
             header={
@@ -107,76 +128,189 @@ export default function Dashboard() {
             }
             main={
                 <div className="p-6 text-neutral-900">
-                    {loading && <p>Loading songs...</p>}
-
                     {error && <p className="error">{error}</p>}
 
-                    {!loading && !error && songsData.data.length === 0 && (
-                        <p className="text-center text-violet-400">
-                            No songs to display.
-                        </p>
-                    )}
-
-                    {!loading && !error && songsData.data.length > 0 && (
-                        <>
-                            <div className="overflow-x-auto">
-                                <table className=" text-left ">
-                                    <thead className="bg-gray-800 text-violet-400 uppercase text-sm">
-                                        <tr>
-                                            <th className="px-4 py-4">Title</th>
-                                            <th className="px-4 py-3">Genre</th>
-                                            <th className="px-4 py-3">
-                                                Release Date
-                                            </th>
-                                            <th className="px-4 py-3"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="bg-gradient-to-b from-neutral-600 to-neutral-800 divide-y divide-gray-700">
-                                        {songsData.data.map((song) => (
-                                            <tr key={song.id}>
-                                                <td className="px-4 py-3">
-                                                    <Link
-                                                        href={`/songs/${song.id}`}
-                                                        className="text-violet-300 hover:underline"
-                                                    >
-                                                        {song.title}
-                                                    </Link>
-                                                </td>
-                                                <td className="px-4 py-3 text-violet-300">
-                                                    {song.genre}
-                                                </td>
-                                                <td className="px-4 py-3 text-violet-300">
-                                                    {song.release_date}
-                                                </td>
-                                                <td className="px-4 py-3 space-x-4">
-                                                    <Link
-                                                        href={`/songs/${song.id}/edit`}
-                                                        className="text-violet-300 hover:underline"
-                                                    >
-                                                        Edit
-                                                    </Link>
+                    {loading ? (
+                        <div className="flex justify-center my-6">
+                            <div className="loader ease-linear rounded-full border-4 border-t-4 border-violet-400 h-8 w-8"></div>
+                        </div>
+                    ) : (
+                        !error && (
+                            <>
+                                {/* Table and filter controls */}
+                                <div className="overflow-x-auto">
+                                    <table className="text-left w-full">
+                                        <thead className="bg-gray-800 text-violet-400 uppercase text-sm">
+                                            <tr>
+                                                <th className="px-4 py-4">
+                                                    Title
+                                                </th>
+                                                <th className=" px-4 py-3 text-left text-sm">
                                                     <button
                                                         onClick={() =>
-                                                            handleDelete(
-                                                                song.id
+                                                            setShowGenreMenu(
+                                                                !showGenreMenu
                                                             )
                                                         }
-                                                        className="text-violet-300 hover:underline"
+                                                        className="flex items-center gap-1 text-violet-400 uppercase"
                                                     >
-                                                        Delete
+                                                        Genre
+                                                        <svg
+                                                            className="w-4 h-4 transform transition-transform duration-200"
+                                                            style={{
+                                                                transform:
+                                                                    showGenreMenu
+                                                                        ? "rotate(180deg)"
+                                                                        : "rotate(0deg)",
+                                                            }}
+                                                            fill="currentColor"
+                                                            viewBox="0 0 20 20"
+                                                        >
+                                                            <path
+                                                                fillRule="evenodd"
+                                                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 011.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                                                clipRule="evenodd"
+                                                            />
+                                                        </svg>
                                                     </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
 
-                            <Pagination
-                                links={songsData.links}
-                                onPageClick={handlePageClick}
-                            />
-                        </>
+                                                    {/* Genre dropdown menu */}
+                                                    {showGenreMenu && (
+                                                        <ul className="absolute mt-2 bg-gray-800 text-violet-200 w-28 normal-case z-10 max-h-60 overflow-y-auto rounded shadow-md">
+                                                            {[
+                                                                "All",
+                                                                "Rock",
+                                                                "Pop",
+                                                                "Jazz",
+                                                                "Classical",
+                                                                "Electronic",
+                                                                "Hip-hop",
+                                                            ].map((genre) => (
+                                                                <li
+                                                                    key={genre}
+                                                                    onClick={() => {
+                                                                        setSelectedGenre(
+                                                                            genre ===
+                                                                                "All"
+                                                                                ? ""
+                                                                                : genre
+                                                                        );
+                                                                        setShowGenreMenu(
+                                                                            false
+                                                                        );
+                                                                    }}
+                                                                    className={`px-4 py-2 cursor-pointer hover:bg-violet-500 ${
+                                                                        selectedGenre ===
+                                                                            genre ||
+                                                                        (genre ===
+                                                                            "All" &&
+                                                                            selectedGenre ===
+                                                                                "")
+                                                                            ? "bg-violet-600"
+                                                                            : ""
+                                                                    }`}
+                                                                >
+                                                                    {genre}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+                                                </th>
+                                                <th className="px-4 py-3">
+                                                    {/* Sort button */}
+                                                    <button
+                                                        onClick={() => {
+                                                            setSortDirection(
+                                                                (prev) =>
+                                                                    prev ===
+                                                                    "asc"
+                                                                        ? "desc"
+                                                                        : "asc"
+                                                            );
+                                                        }}
+                                                        className="flex items-center gap-1 text-violet-400 uppercase"
+                                                    >
+                                                        Release Date
+                                                        <svg
+                                                            className={`w-4 h-4 transform transition-transform duration-200 ${
+                                                                sortDirection ===
+                                                                "asc"
+                                                                    ? "rotate-180"
+                                                                    : ""
+                                                            }`}
+                                                            fill="currentColor"
+                                                            viewBox="0 0 20 20"
+                                                        >
+                                                            <path
+                                                                fillRule="evenodd"
+                                                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 011.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                                                clipRule="evenodd"
+                                                            />
+                                                        </svg>
+                                                    </button>
+                                                </th>
+                                                <th className="px-4 py-3"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-gradient-to-b from-neutral-600 to-neutral-800 divide-y divide-gray-700">
+                                            {songsData.data.length === 0 ? (
+                                                <tr>
+                                                    <td
+                                                        colSpan={4}
+                                                        className="px-4 py-6 text-center text-violet-400 italic"
+                                                    >
+                                                        {noSongsMessage}
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                                songsData.data.map((song) => (
+                                                    <tr key={song.id}>
+                                                        <td className="px-4 py-3">
+                                                            <Link
+                                                                href={`/songs/${song.id}`}
+                                                                className="text-violet-300 hover:underline"
+                                                            >
+                                                                {song.title}
+                                                            </Link>
+                                                        </td>
+                                                        <td className="px-4 py-3 text-violet-300">
+                                                            {song.genre}
+                                                        </td>
+                                                        <td className="px-4 py-3 text-violet-300">
+                                                            {song.release_date}
+                                                        </td>
+                                                        <td className="px-4 py-3 space-x-4">
+                                                            <Link
+                                                                href={`/songs/${song.id}/edit`}
+                                                                className="text-violet-300 hover:underline"
+                                                            >
+                                                                Edit
+                                                            </Link>
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleDelete(
+                                                                        song.id
+                                                                    )
+                                                                }
+                                                                className="text-violet-300 hover:underline"
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                {/* Pagination controls */}
+                                <Pagination
+                                    links={songsData.links}
+                                    onPageClick={handlePageClick}
+                                />
+                            </>
+                        )
                     )}
                 </div>
             }

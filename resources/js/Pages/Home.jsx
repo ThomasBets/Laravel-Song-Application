@@ -4,11 +4,14 @@ import { AppContext } from "../Context/AppContext";
 import MainLayout from "../Layouts/MainLayout";
 
 export default function Home() {
+    // Access global user and token state from context
     const { user, token, setUser, setToken } = useContext(AppContext);
 
+    // Handle logout functionality
     async function handleLogout(e) {
         e.preventDefault();
 
+        // Send logout request to the server
         const res = await fetch("/api/logout", {
             method: "POST",
             headers: {
@@ -17,6 +20,7 @@ export default function Home() {
         });
 
         if (res.ok) {
+            // Clear user session and redirect to home page
             setUser(null);
             setToken(null);
             localStorage.removeItem("token");
@@ -26,12 +30,14 @@ export default function Home() {
 
     return (
         <MainLayout
+            // Header section of the layout
             header={
                 user ? (
+                    // If the user is logged in
                     <div className="flex w-full justify-between items-center ml-12">
-                        {/* Left side: Links */}
                         <div className="flex space-x-8">
                             {user.role === "admin" ? (
+                                // Admin sees both "All Songs" and "My Songs"
                                 <div className="flex space-x-8">
                                     <Link
                                         href="/dashboard?view=allsongs"
@@ -47,6 +53,7 @@ export default function Home() {
                                     </Link>
                                 </div>
                             ) : (
+                                // Regular users see only "My Songs"
                                 <Link
                                     href="/dashboard?view=mysongs"
                                     className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
@@ -55,6 +62,7 @@ export default function Home() {
                                 </Link>
                             )}
 
+                            {/* Add song link (visible to all logged-in users) */}
                             <Link
                                 href="/store"
                                 className="text-violet-300 text-xl hover:[text-shadow:_0_0_10px_#faf5ff] transition"
@@ -63,16 +71,16 @@ export default function Home() {
                             </Link>
                         </div>
 
+                        {/* User info and logout*/}
                         <div className="flex items-center space-x-6">
-                            <p className="text-violet-300">
-                                {user.name}
-                            </p>
+                            <p className="text-violet-300">{user.name}</p>
                             <form onSubmit={handleLogout}>
                                 <button className="button">Logout</button>
                             </form>
                         </div>
                     </div>
                 ) : (
+                    // If the user is NOT logged in, show login/register buttons
                     <div className="items-center space-x-5">
                         <Link href="/login" className="button">
                             Login
@@ -83,9 +91,9 @@ export default function Home() {
                     </div>
                 )
             }
+            // Main content of the home page
             main={
                 <div>
-
                     <p className="text-3xl fancy_text">
                         Discover and share your favorite songs!
                     </p>
