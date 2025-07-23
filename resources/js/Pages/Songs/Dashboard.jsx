@@ -115,7 +115,10 @@ export default function Dashboard() {
     return (
         <MainLayout
             header={
-                <button onClick={() => router.visit("/")} className="px-4 py-2 link">
+                <button
+                    onClick={() => router.visit("/")}
+                    className="px-4 py-2 link"
+                >
                     Back
                 </button>
             }
@@ -152,36 +155,34 @@ export default function Dashboard() {
                                                         <th className="px-4 py-4">
                                                             Title
                                                         </th>
-                                                        <th className="px-4 py-3 text-left text-sm">
-                                                            <button
-                                                                onClick={() =>
-                                                                    setShowGenreMenu(
-                                                                        !showGenreMenu
-                                                                    )
-                                                                }
-                                                                className="flex items-center gap-1 text-violet-400 uppercase"
-                                                            >
+
+                                                        <th className="px-4 py-3 relative text-left text-sm">
+                                                            <div className="flex items-center gap-1 text-violet-400 uppercase select-none">
                                                                 Genre
-                                                                <svg
-                                                                    className="w-4 h-4 transform transition-transform duration-200"
-                                                                    style={{
-                                                                        transform:
-                                                                            showGenreMenu
-                                                                                ? "rotate(180deg)"
-                                                                                : "rotate(0deg)",
-                                                                    }}
-                                                                    fill="currentColor"
-                                                                    viewBox="0 0 20 20"
+                                                                <button
+                                                                    onClick={() =>
+                                                                        setShowGenreMenu(
+                                                                            !showGenreMenu
+                                                                        )
+                                                                    }
+                                                                    className="w-5 h-5 flex items-center justify-center transition-transform duration-200"
+                                                                    aria-label="Toggle Genre Menu"
                                                                 >
-                                                                    <path
-                                                                        fillRule="evenodd"
-                                                                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 011.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                                                        clipRule="evenodd"
+                                                                    <img
+                                                                        src="/icons/arrow-down.svg"
+                                                                        alt=""
+                                                                        className={`w-6 h-6 transition-transform duration-200 ${
+                                                                            showGenreMenu
+                                                                                ? "rotate-180"
+                                                                                : ""
+                                                                        }`}
                                                                     />
-                                                                </svg>
-                                                            </button>
+                                                                </button>
+                                                            </div>
+
+                                                            {/* Genre dropdown menu */}
                                                             {showGenreMenu && (
-                                                                <ul className="absolute mt-2 bg-gray-800 text-violet-200 w-28 normal-case z-10 max-h-60 overflow-y-auto rounded shadow-md">
+                                                                <ul className="absolute left-0 mt-2 bg-gray-800 text-violet-200 w-28 normal-case z-10 max-h-60 overflow-y-auto rounded shadow-md">
                                                                     {[
                                                                         "All",
                                                                         "Rock",
@@ -229,6 +230,7 @@ export default function Dashboard() {
                                                                 </ul>
                                                             )}
                                                         </th>
+
                                                         <th className="px-4 py-3">
                                                             <button
                                                                 onClick={() => {
@@ -243,26 +245,22 @@ export default function Dashboard() {
                                                                     );
                                                                 }}
                                                                 className="flex items-center gap-1 text-violet-400 uppercase"
+                                                                aria-label="Sort by Release Date"
                                                             >
                                                                 Release Date
-                                                                <svg
-                                                                    className={`w-4 h-4 transform transition-transform duration-200 ${
+                                                                <img
+                                                                    src="/icons/arrow-down.svg"
+                                                                    alt=""
+                                                                    className={`w-5 h-5 transition-transform duration-200 ${
                                                                         sortDirection ===
                                                                         "asc"
                                                                             ? "rotate-180"
                                                                             : ""
                                                                     }`}
-                                                                    fill="currentColor"
-                                                                    viewBox="0 0 20 20"
-                                                                >
-                                                                    <path
-                                                                        fillRule="evenodd"
-                                                                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 011.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                                                        clipRule="evenodd"
-                                                                    />
-                                                                </svg>
+                                                                />
                                                             </button>
                                                         </th>
+
                                                         <th className="px-4 py-3"></th>
                                                     </tr>
                                                 </thead>
