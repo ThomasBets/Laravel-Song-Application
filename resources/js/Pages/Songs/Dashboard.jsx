@@ -115,12 +115,17 @@ export default function Dashboard() {
     return (
         <MainLayout
             header={
-                <button
-                    onClick={() => router.visit("/")}
-                    className="px-4 py-2 link"
-                >
-                    Back
-                </button>
+                <div className="w-full flex items-center justify-between ">
+                    <Link href="/store" className="link ml-10">
+                        Add a Song
+                    </Link>
+                    <button
+                        onClick={() => router.visit("/")}
+                        className="px-4 py-2 link"
+                    >
+                        Back
+                    </button>
+                </div>
             }
             main={
                 <div className="p-6 text-neutral-900">

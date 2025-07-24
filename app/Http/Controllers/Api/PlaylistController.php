@@ -1,0 +1,82 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Models\Playlist;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
+
+class PlaylistController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        return Playlist::all();
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+         /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $this->authorize('create', Playlist::class);
+
+        $playlist = Playlist::create([
+            ...$request->validate([
+                'title' => 'required|string|max:100',
+                'visibility' => 'required|string|max:55|in:private,public',
+            ]),
+            'user_id' => $user->id
+        ]);
+
+            return $playlist;
+
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Playlist $playlist)
+    {
+        $this->authorize('view', $playlist);
+
+        return $playlist;
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Playlist $playlist)
+    {
+        $this->authorize('update', $playlist);
+
+        $validated = $request->validate([
+            'title' => 'sometimes|string|max:100',
+            'visibility' => 'required|string|max:55|in:private,public',
+        ]);
+
+        $playlist->update($validated);
+
+        return response()->json(['message' => 'Playlist updated successfully.']);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Playlist $playlist)
+    {
+        $this->authorize('delete', $playlist);
+
+        $playlist->delete();
+
+        return response()->json(['message' => 'Playlist updated successfully.']);
+    }
+}

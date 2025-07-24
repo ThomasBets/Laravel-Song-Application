@@ -17,4 +17,4 @@ Route::inertia('/songs/{id}','Songs/Show');
 
 Route::inertia('/songs/{id}/edit','Songs/Edit');
 
-
+Route::inertia('/pDashboard','Playlists/Playlist-Dashboard');

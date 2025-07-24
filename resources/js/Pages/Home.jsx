@@ -63,17 +63,16 @@ export default function Home() {
                             )}
 
                             {/* Add song link (visible to all logged-in users) */}
-                            <Link
-                                href="/store"
-                                className="link"
-                            >
-                                Add a Song
+                            <Link href="/pDashboard" className="link">
+                                My Playlists
                             </Link>
                         </div>
 
                         {/* User info and logout*/}
                         <div className="flex items-center space-x-6">
-                            <p className="text-violet-300 text-xl">{user.name}</p>
+                            <p className="text-violet-300 text-xl">
+                                {user.name}
+                            </p>
                             <form onSubmit={handleLogout}>
                                 <button className="link">Logout</button>
                             </form>
