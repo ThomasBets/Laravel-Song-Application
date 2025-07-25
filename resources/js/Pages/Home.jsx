@@ -64,7 +64,7 @@ export default function Home() {
 
                             {/* Add song link (visible to all logged-in users) */}
                             <Link href="/pDashboard" className="link">
-                                My Playlists
+                                Playlists
                             </Link>
                         </div>
 

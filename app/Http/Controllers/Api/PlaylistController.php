@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Inertia\Inertia;
 use App\Models\Playlist;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -16,7 +17,22 @@ class PlaylistController extends Controller
      */
     public function index(Request $request)
     {
-        return Playlist::all();
+        /** @var \App\Models\User $user */
+        $user = Auth::user(); // Get the currently authenticated user
+
+        $type = $request->query("type", 'personal');
+
+        if ($type == 'personal') {
+            $playlists = Playlist::with('user')->where('user_id', $user->id)->get();
+        } else if ($type == "public") {
+            $playlists = Playlist::with('user')->where('visibility', 'public')->where('user_id', '!=', $user->id)->get();
+        } else {
+            return response()->json(['error' => 'Invalid type'], 400);
+        }
+        return response()->json([
+            'playlists' => $playlists,
+            'type' => $type
+        ]);
     }
 
     /**
@@ -24,7 +40,7 @@ class PlaylistController extends Controller
      */
     public function store(Request $request)
     {
-         /** @var \App\Models\User $user */
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $this->authorize('create', Playlist::class);
@@ -37,8 +53,7 @@ class PlaylistController extends Controller
             'user_id' => $user->id
         ]);
 
-            return $playlist;
-
+        return $playlist;
     }
 
     /**
@@ -48,7 +63,11 @@ class PlaylistController extends Controller
     {
         $this->authorize('view', $playlist);
 
-        return $playlist;
+        $playlist->load('songs');
+
+        return response()->json([
+            'playlist' => $playlist
+        ]);
     }
 
     /**

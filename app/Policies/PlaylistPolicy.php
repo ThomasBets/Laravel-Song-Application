@@ -27,9 +27,9 @@ class playlistPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, Playlist $playlist): bool
+    public function create(User $user): bool
     {
-        return $user->id === $playlist->user_id || $user->isAdmin();
+        return true;
     }
 
     /**
