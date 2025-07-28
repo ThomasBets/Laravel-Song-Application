@@ -13,7 +13,7 @@ class playlistPolicy
      */
     public function viewAny(User $user, Playlist $playlist): bool
     {
-        return $user->id === $playlist->user_id || $user->isAdmin();
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class playlistPolicy
      */
     public function view(User $user, Playlist $playlist): bool
     {
-        return $user->id === $playlist->user_id || $user->isAdmin();
+        return true;
     }
 
     /**
@@ -45,7 +45,7 @@ class playlistPolicy
      */
     public function delete(User $user, Playlist $playlist): bool
     {
-        return true;
+        return $user->id === $playlist->user_id || $user->isAdmin();
     }
 
     /**

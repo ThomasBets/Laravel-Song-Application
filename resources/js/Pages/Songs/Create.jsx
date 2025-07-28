@@ -1,15 +1,21 @@
-import { Link, router } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import { useContext, useState } from "react";
 import { AppContext } from "../../Context/AppContext";
 import MainLayout from "../../Layouts/MainLayout";
 
 export default function Create() {
+    const { url } = usePage();
+    const searchParams = new URLSearchParams(url.split("?")[1]);
+    const playlist_id = searchParams.get("playlist_id");
+    const type = searchParams.get("type");
+
     // Form state to store input values
     const [formData, setFormData] = useState({
         title: "",
         description: "",
         genre: "",
         release_date: "",
+        playlist_id: playlist_id || null,
     });
 
     const [errors, setErrors] = useState({});
@@ -35,7 +41,11 @@ export default function Create() {
 
             if (res.ok) {
                 setMessage("Store successful!");
-                router.visit("/"); // Redirect to homepage after success
+                if (playlist_id) {
+                    router.visit(`/playlists/${playlist_id}?type=${type}`);
+                } else {
+                    router.visit("/");
+                }
             } else if (res.status === 422) {
                 setErrors(data.errors || {}); // Display validation errors
             } else {
@@ -50,7 +60,16 @@ export default function Create() {
         <MainLayout
             header={
                 <button
-                    onClick={() => router.visit("/")}
+                    onClick={() => {
+                        if (playlist_id) {
+                            const url = `/playlists/${playlist_id}${
+                                type ? `?type=${type}` : ""
+                            }`;
+                            router.visit(url);
+                        } else {
+                            router.visit("/dashboard");
+                        }
+                    }}
                     className="px-4 py-2 link"
                 >
                     Back

@@ -22,7 +22,7 @@ class SongPolicy
      */
     public function view(User $user, Song $song): bool
     {
-        return $user->id === $song->user_id || $user->isAdmin(); // Allows the user to view a song only if he owns the song or is an admin.
+        return true; 
     }
 
     /**

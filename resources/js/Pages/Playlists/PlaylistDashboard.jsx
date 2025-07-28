@@ -2,11 +2,15 @@ import MainLayout from "../../Layouts/MainLayout";
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AppContext } from "../../Context/AppContext";
-import { router } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { Link } from "@inertiajs/react";
 
 export default function PlaylistDashboard() {
-    const [type, setType] = useState("personal");
+    const { url } = usePage();
+    const params = new URLSearchParams(url.split("?")[1]);
+    const defaultType = params.get("type") || "personal";
+
+    const [type, setType] = useState(defaultType);
     const [playlists, setPlaylists] = useState([]);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
@@ -71,7 +75,7 @@ export default function PlaylistDashboard() {
                     <div className="flex ml-5 space-x-5 text-left">
                         <button
                             className={`link ${
-                                type === "personal" ? "font-bold underline" : ""
+                                type === "personal" ? "font-bold" : ""
                             }`}
                             onClick={() => setType("personal")}
                         >
@@ -79,7 +83,7 @@ export default function PlaylistDashboard() {
                         </button>
                         <button
                             className={`link ${
-                                type === "public" ? "font-bold underline" : ""
+                                type === "public" ? "font-bold" : ""
                             }`}
                             onClick={() => setType("public")}
                         >
@@ -120,9 +124,12 @@ export default function PlaylistDashboard() {
                                             Visibility
                                         </th>
                                         {showEditColumn && (
-                                            <th className="px-4 py-3"></th>
+                                            <>
+                                                <th className="px-4 py-3"></th>
+
+                                                <th className="px-4 py-3"></th>
+                                            </>
                                         )}
-                                        <th className="px-4 py-3"></th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-gradient-to-b from-neutral-600 to-neutral-800 divide-y divide-gray-700">
@@ -130,7 +137,7 @@ export default function PlaylistDashboard() {
                                         <tr key={playlist.id}>
                                             <td className="px-4 py-3 text-violet-300">
                                                 <Link
-                                                    href={`/playlists/${playlist.id}`}
+                                                    href={`/playlists/${playlist.id}?type=${type}`}
                                                     className="text-violet-300 hover:underline"
                                                 >
                                                     {playlist.title}
@@ -143,32 +150,35 @@ export default function PlaylistDashboard() {
                                             {(user.role === "admin" ||
                                                 user.id ===
                                                     playlist.user?.id) && (
-                                                <td className="px-4 py-3">
-                                                    <button
-                                                        onClick={() =>
-                                                            router.visit(
-                                                                `/playlists/edit/${playlist.id}`
-                                                            )
-                                                        }
-                                                        className="text-violet-300 hover:underline"
-                                                    >
-                                                        Edit
-                                                    </button>
-                                                </td>
+                                                <>
+                                                    <td className="px-4 py-3">
+                                                        <button
+                                                            onClick={() =>
+                                                                router.visit(
+                                                                    `/playlists/edit/${playlist.id}?type=${type}`
+                                                                )
+                                                            }
+                                                            className="text-violet-300 hover:underline"
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                    </td>
+
+                                                    <td className="px-4 py-3">
+                                                        <button
+                                                            onClick={() =>
+                                                                handleDelete(
+                                                                    playlist.id,
+                                                                    type
+                                                                )
+                                                            }
+                                                            className="text-violet-300 hover:underline"
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </td>
+                                                </>
                                             )}
-                                            <td className="px-4 py-3">
-                                                <button
-                                                    onClick={() =>
-                                                        handleDelete(
-                                                            playlist.id,
-                                                            type
-                                                        )
-                                                    }
-                                                    className="text-violet-300 hover:underline"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>

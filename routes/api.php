@@ -20,3 +20,5 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::apiResource('/songs', SongController::class)->middleware('auth:sanctum');
 
 Route::apiResource('playlists', PlaylistController::class)->middleware('auth:sanctum');
+
+Route::delete('/playlists/{playlist}/songs/{song}', [PlaylistController::class, 'detachSong'])->middleware('auth:sanctum');

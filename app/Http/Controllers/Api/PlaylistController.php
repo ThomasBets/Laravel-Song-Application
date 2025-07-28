@@ -63,7 +63,7 @@ class PlaylistController extends Controller
     {
         $this->authorize('view', $playlist);
 
-        $playlist->load('songs');
+        $playlist->load('songs', 'user');
 
         return response()->json([
             'playlist' => $playlist
@@ -98,4 +98,18 @@ class PlaylistController extends Controller
 
         return response()->json(['message' => 'Playlist updated successfully.']);
     }
+
+    // PlaylistController.php
+
+public function detachSong(Request $request, $playlistId, $songId)
+{
+    $playlist = Playlist::findOrFail($playlistId);
+
+    $this->authorize('update', $playlist);
+
+    $playlist->songs()->detach($songId);
+
+    return response()->json(['message' => 'Song removed from playlist.']);
+}
+
 }

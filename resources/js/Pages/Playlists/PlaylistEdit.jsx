@@ -1,12 +1,16 @@
 import MainLayout from "../../Layouts/MainLayout";
 import { AppContext } from "../../Context/AppContext";
 import { useContext, useState, useEffect } from "react";
+import { router, usePage } from "@inertiajs/react";
 
 export default function PlaylistEdit() {
     const { token } = useContext(AppContext);
 
-    const id = window.location.pathname.split("/").pop();
-    console.log(id);
+    const { url } = usePage();
+
+    const id = url.split("?")[0].split("/").pop();
+    const type =
+        new URLSearchParams(url.split("?")[1]).get("type") || "personal";
 
     const [formData, setFormData] = useState({
         title: "",
@@ -77,7 +81,7 @@ export default function PlaylistEdit() {
         <MainLayout
             header={
                 <button
-                    onClick={() => window.history.back()}
+                    onClick={() => router.visit(`/pDashboard?type=${type}`)}
                     className="px-4 py-2 link"
                 >
                     Back
@@ -146,7 +150,9 @@ export default function PlaylistEdit() {
                                     <option value="public">Public</option>
                                 </select>
                                 {errors.visibility && (
-                                    <p className="error">{errors.visibility[0]}</p>
+                                    <p className="error">
+                                        {errors.visibility[0]}
+                                    </p>
                                 )}
                             </div>
 

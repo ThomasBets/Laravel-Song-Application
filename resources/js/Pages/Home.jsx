@@ -70,12 +70,17 @@ export default function Home() {
 
                         {/* User info and logout*/}
                         <div className="flex items-center space-x-6">
-                            <p className="text-violet-300 text-xl">
-                                {user.name}
-                            </p>
+                            <div className="flex flex-col items-center">
+
+                                <p className="text-violet-300 text-xl">
+                                    {user.name}
+                                </p>
+                                <p className="text-violet-300"> {user.role}</p>
+                            </div>
                             <form onSubmit={handleLogout}>
                                 <button className="link">Logout</button>
                             </form>
+
                         </div>
                     </div>
                 ) : (

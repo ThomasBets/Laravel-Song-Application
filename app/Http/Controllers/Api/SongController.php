@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Song;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Models\Playlist;
+use Illuminate\Http\Request;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class SongController extends Controller
 {
@@ -71,6 +72,11 @@ class SongController extends Controller
             ]),
             'user_id' => $user->id
         ]);
+
+        if ($request->playlist_id) {
+            $playlist = Playlist::find($request->playlist_id);
+            $playlist->songs()->attach($song->id);
+        }
         return [
             'song' => $song,
             'user' => $song->user,

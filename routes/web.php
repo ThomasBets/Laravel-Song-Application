@@ -23,3 +23,5 @@ Route::inertia('/pStore', 'Playlists/PlaylistCreate');
 Route::inertia('/playlists/edit/{id}', 'Playlists/PlaylistEdit');
 
 Route::inertia('/playlists/{id}', 'Playlists/PlaylistShow');
+
+
