@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Models\Playlist;
 use App\Models\Song;
 use App\Models\User;
-use Inertia\Inertia;
-use App\Models\Playlist;
-use Illuminate\Http\Request;
-
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class SongController extends Controller
 {
@@ -63,24 +64,41 @@ class SongController extends Controller
 
         $this->authorize('create', Song::class);
 
-        $song = Song::create([
-            ...$request->validate([
-                'title' => 'required|string|max:100',
-                'description' => 'nullable|string',
-                'genre' => 'required|string|max:55|in:Classical,Pop,Rock,Hip-hop,Electronic,Jazz',
-                'release_date' => 'required|date'
-            ]),
-            'user_id' => $user->id
+        $validated = $request->validate([
+            'title' => 'required|string|max:100',
+            'description' => 'nullable|string',
+            'genre' => 'required|string|max:55|in:Classical,Pop,Rock,Hip-hop,Electronic,Jazz',
+            'release_date' => 'required|date',
+            'audio_file' => 'required|file|mimes:mp3,wav,aac,ogg|max:1024',
         ]);
 
-        if ($request->playlist_id) {
-            $playlist = Playlist::find($request->playlist_id);
-            $playlist->songs()->attach($song->id);
+
+        $song = new Song();
+        $song->title = $validated['title'];
+        $song->description = $validated['description'] ?? null;
+        $song->genre = $validated['genre'];
+        $song->release_date = $validated['release_date'];
+        $song->user_id = $user->id;
+
+        if ($request->hasFile('audio_file')) {
+            $path = $request->file('audio_file')->store('audio', 'public');
+            $fileName = basename($path);
+            $song->audio_file_path = $path;
+
+            $song->save();
+
+            if ($request->playlist_id) {
+                $playlist = Playlist::find($request->playlist_id);
+                if ($playlist) {
+                    $playlist->songs()->attach($song->id);
+                }
+            }
+
+            return [
+                'song' => $song,
+                'user' => $song->user,
+            ];
         }
-        return [
-            'song' => $song,
-            'user' => $song->user,
-        ];
     }
 
     // Show details of a specific song after authorization.
@@ -103,13 +121,25 @@ class SongController extends Controller
             'title' => 'sometimes|string|max:100',
             'description' => 'nullable|string',
             'genre' => 'sometimes|string|max:55',
-            'release_date' => 'sometimes|date'
+            'release_date' => 'sometimes|date',
+            'audio_file' => 'nullable|file|mimes:mp3,wav,aac,ogg|max:10240',
         ]);
+
+        if ($request->hasFile('audio_file')) {
+
+            Storage::delete('public/' . $song->audio_file_path);
+
+            $path = $request->file('audio_file')->store('public/audio');
+            $fileName = basename($path);
+
+            $validated['audio_file_path'] = 'audio/' . $fileName;
+        }
 
         $song->update($validated);
 
         return response()->json(['message' => 'Song updated successfully.']);
     }
+
 
     // Delete the specified song after checking permissions.
     public function destroy(Song $song)

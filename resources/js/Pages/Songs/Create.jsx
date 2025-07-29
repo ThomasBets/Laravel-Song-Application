@@ -10,12 +10,12 @@ export default function Create() {
     const type = searchParams.get("type");
     const view = new URLSearchParams(window.location.search).get("view");
 
-    // Form state to store input values
     const [formData, setFormData] = useState({
         title: "",
         description: "",
         genre: "",
         release_date: "",
+        audio_file: null, // store actual File object
         playlist_id: playlist_id || null,
     });
 
@@ -23,19 +23,29 @@ export default function Create() {
     const [message, setMessage] = useState("");
     const { token } = useContext(AppContext);
 
-    // Handle form submission for creating a new song
     async function handleCreate(e) {
         e.preventDefault();
+
+        const body = new FormData();
+        body.append("title", formData.title);
+        body.append("description", formData.description);
+        body.append("genre", formData.genre);
+        body.append("release_date", formData.release_date);
+        if (formData.audio_file) {
+            body.append("audio_file", formData.audio_file);
+        }
+        if (formData.playlist_id) {
+            body.append("playlist_id", formData.playlist_id);
+        }
 
         try {
             const res = await fetch("/api/songs", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
                     Accept: "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(formData),
+                body,
             });
 
             const data = await res.json();
@@ -48,7 +58,7 @@ export default function Create() {
                     router.visit(`/dashboard?view=${view}`);
                 }
             } else if (res.status === 422) {
-                setErrors(data.errors || {}); // Display validation errors
+                setErrors(data.errors || {});
             } else {
                 setMessage("Something went wrong. Please try again.");
             }
@@ -83,12 +93,11 @@ export default function Create() {
                             Add a Song
                         </h2>
 
-                        {/* Display any success or error message */}
                         {message && (
                             <p className="text-violet-300 mb-4">{message}</p>
                         )}
 
-                        {/* Title Input */}
+                        {/* Title */}
                         <div className="mb-4">
                             <label className="block text-violet-200 mb-1">
                                 Title
@@ -110,7 +119,7 @@ export default function Create() {
                             )}
                         </div>
 
-                        {/* Description Input */}
+                        {/* Description */}
                         <div className="mb-4">
                             <label className="block text-violet-200 mb-1">
                                 Description
@@ -132,7 +141,7 @@ export default function Create() {
                             )}
                         </div>
 
-                        {/* Genre Select */}
+                        {/* Genre */}
                         <div className="mb-6">
                             <label className="block text-violet-200 mb-1">
                                 Genre
@@ -147,53 +156,22 @@ export default function Create() {
                                     })
                                 }
                             >
-                                <option
-                                    className="text-violet-200"
-                                    value=""
-                                    disabled
-                                >
+                                <option value="" disabled>
                                     Select a Genre
                                 </option>
-                                <option
-                                    className="text-violet-200"
-                                    value="Classical"
-                                >
-                                    Classical
-                                </option>
-                                <option className="text-violet-200" value="Pop">
-                                    Pop
-                                </option>
-                                <option
-                                    className="text-violet-200"
-                                    value="Rock"
-                                >
-                                    Rock
-                                </option>
-                                <option
-                                    className="text-violet-200"
-                                    value="Hip-hop"
-                                >
-                                    Hip-Hop
-                                </option>
-                                <option
-                                    className="text-violet-200"
-                                    value="Electronic"
-                                >
-                                    Electronic
-                                </option>
-                                <option
-                                    className="text-violet-200"
-                                    value="Jazz"
-                                >
-                                    Jazz
-                                </option>
+                                <option value="Classical">Classical</option>
+                                <option value="Pop">Pop</option>
+                                <option value="Rock">Rock</option>
+                                <option value="Hip-hop">Hip-Hop</option>
+                                <option value="Electronic">Electronic</option>
+                                <option value="Jazz">Jazz</option>
                             </select>
                             {errors.genre && (
                                 <p className="error">{errors.genre[0]}</p>
                             )}
                         </div>
 
-                        {/* Release Date Input */}
+                        {/* Release Date */}
                         <div className="mb-4">
                             <label className="block text-violet-200 mb-1">
                                 Release date
@@ -216,6 +194,28 @@ export default function Create() {
                             )}
                         </div>
 
+                        {/* Audio File Upload */}
+                        <div className="mb-4">
+                            <label className="block text-violet-200 mb-1">
+                                Audio File
+                            </label>
+                            <input
+                                type="file"
+                                accept="audio/*"
+                                className="w-full p-2 border text-violet-200 border-violet-200 rounded"
+                                onChange={(e) =>
+                                    setFormData({
+                                        ...formData,
+                                        audio_file: e.target.files[0],
+                                    })
+                                }
+                            />
+                            {errors.audio_file && (
+                                <p className="error">{errors.audio_file[0]}</p>
+                            )}
+                        </div>
+
+                        {/* Submit Button */}
                         <button type="submit" className="w-full button">
                             Store
                         </button>

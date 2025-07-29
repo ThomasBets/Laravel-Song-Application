@@ -17,6 +17,7 @@ export default function Edit() {
         description: "",
         genre: "",
         release_date: "",
+        audio_file_path: "",
     });
 
     const [message, setMessage] = useState("");
@@ -208,6 +209,30 @@ export default function Edit() {
                                 {errors.release_date && (
                                     <p className="error">
                                         {errors.release_date[0]}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="block text-violet-200 mb-1">
+                                    Audio
+                                </label>
+                                <input
+                                    type="file"
+                                    className="w-full p-2 border text-violet-200 border-violet-200 rounded"
+                                    name="audio file"
+                                    accept="audio/*"
+                                    value={formData.audio_file_path}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            audio_file_path: e.target.value,
+                                        })
+                                    }
+                                />
+                                {errors.audio_file_path && (
+                                    <p className="error">
+                                        {errors.audio_file_path[0]}
                                     </p>
                                 )}
                             </div>

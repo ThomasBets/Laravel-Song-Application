@@ -243,6 +243,9 @@ export default function Dashboard() {
                                                                 />
                                                             </button>
                                                         </th>
+                                                        <th className="px-4 py-4">
+                                                            Preview
+                                                        </th>
 
                                                         <th className="px-4 py-3"></th>
                                                     </tr>
@@ -269,6 +272,32 @@ export default function Dashboard() {
                                                                         song.release_date
                                                                     }
                                                                 </td>
+                                                                <td className="px-4 py-3">
+                                                                    {song.audio_url ? (
+                                                                        <audio
+                                                                            controls
+                                                                            className="w-48"
+                                                                            src={
+                                                                                song.audio_url
+                                                                            }
+                                                                        >
+                                                                            Your
+                                                                            browser
+                                                                            does
+                                                                            not
+                                                                            support
+                                                                            the
+                                                                            audio
+                                                                            element.
+                                                                        </audio>
+                                                                    ) : (
+                                                                        <span className="text-sm text-violet-200 italic">
+                                                                            No
+                                                                            audio
+                                                                        </span>
+                                                                    )}
+                                                                </td>
+
                                                                 <td className="px-4 py-3 space-x-4">
                                                                     {view ===
                                                                         "mysongs" && (

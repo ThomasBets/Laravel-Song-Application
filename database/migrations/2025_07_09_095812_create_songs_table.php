@@ -16,14 +16,12 @@ return new class extends Migration
 
         Schema::create('songs', function (Blueprint $table) {
             $table->id();
-
             $table->foreignIdFor(User::class);
-
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('genre');
             $table->date('release_date');
-
+            $table->string('audio_file_path');
             $table->timestamps();
         });
     }
