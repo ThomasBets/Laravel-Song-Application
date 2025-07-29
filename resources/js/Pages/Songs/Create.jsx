@@ -8,6 +8,7 @@ export default function Create() {
     const searchParams = new URLSearchParams(url.split("?")[1]);
     const playlist_id = searchParams.get("playlist_id");
     const type = searchParams.get("type");
+    const view = new URLSearchParams(window.location.search).get("view");
 
     // Form state to store input values
     const [formData, setFormData] = useState({
@@ -44,7 +45,7 @@ export default function Create() {
                 if (playlist_id) {
                     router.visit(`/playlists/${playlist_id}?type=${type}`);
                 } else {
-                    router.visit("/");
+                    router.visit(`/dashboard?view=${view}`);
                 }
             } else if (res.status === 422) {
                 setErrors(data.errors || {}); // Display validation errors
@@ -67,7 +68,7 @@ export default function Create() {
                             }`;
                             router.visit(url);
                         } else {
-                            router.visit("/dashboard");
+                            router.visit(`/dashboard?view=${view}`);
                         }
                     }}
                     className="px-4 py-2 link"

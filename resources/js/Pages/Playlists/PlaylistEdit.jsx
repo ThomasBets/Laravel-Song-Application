@@ -59,7 +59,7 @@ export default function PlaylistEdit() {
             });
 
             setMessage("Update successful!");
-            window.history.back();
+           router.visit(`/pDashboard?type=${type}`);
         } catch (error) {
             if (error.response) {
                 if (error.response.status === 422) {

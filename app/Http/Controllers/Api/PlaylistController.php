@@ -23,9 +23,9 @@ class PlaylistController extends Controller
         $type = $request->query("type", 'personal');
 
         if ($type == 'personal') {
-            $playlists = Playlist::with('user')->where('user_id', $user->id)->get();
+            $playlists = Playlist::with('user')->where('user_id', $user->id)->paginate(10);
         } else if ($type == "public") {
-            $playlists = Playlist::with('user')->where('visibility', 'public')->where('user_id', '!=', $user->id)->get();
+            $playlists = Playlist::with('user')->where('visibility', 'public')->where('user_id', '!=', $user->id)->paginate(10);
         } else {
             return response()->json(['error' => 'Invalid type'], 400);
         }
@@ -63,10 +63,13 @@ class PlaylistController extends Controller
     {
         $this->authorize('view', $playlist);
 
-        $playlist->load('songs', 'user');
+        $playlist->load('user');
+
+        $songs = $playlist->songs()->paginate(5);
 
         return response()->json([
-            'playlist' => $playlist
+            'playlist' => $playlist,
+            'songs' => $songs,
         ]);
     }
 
@@ -101,15 +104,14 @@ class PlaylistController extends Controller
 
     // PlaylistController.php
 
-public function detachSong(Request $request, $playlistId, $songId)
-{
-    $playlist = Playlist::findOrFail($playlistId);
+    public function detachSong(Request $request, $playlistId, $songId)
+    {
+        $playlist = Playlist::findOrFail($playlistId);
 
-    $this->authorize('update', $playlist);
+        $this->authorize('update', $playlist);
 
-    $playlist->songs()->detach($songId);
+        $playlist->songs()->detach($songId);
 
-    return response()->json(['message' => 'Song removed from playlist.']);
-}
-
+        return response()->json(['message' => 'Song removed from playlist.']);
+    }
 }

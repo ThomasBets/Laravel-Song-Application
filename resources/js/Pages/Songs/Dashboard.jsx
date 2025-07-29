@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link, router, usePage } from "@inertiajs/react";
 import { AppContext } from "../../Context/AppContext";
 import MainLayout from "../../Layouts/MainLayout";
+import Pagination from "@/Components/Pagination";
 
 export default function Dashboard() {
     const { token } = useContext(AppContext);
@@ -89,34 +90,11 @@ export default function Dashboard() {
         fetchSongs(pageUrl);
     }
 
-    function Pagination({ links, onPageClick }) {
-        if (!links) return null;
-        return (
-            <div className="flex gap-2 mt-6 justify-center flex-wrap">
-                {links.map((link, idx) => (
-                    <button
-                        key={idx}
-                        disabled={!link.url}
-                        onClick={async () => {
-                            await onPageClick(link.url);
-                        }}
-                        dangerouslySetInnerHTML={{ __html: link.label }}
-                        className={`px-3 py-1 rounded border text-sm transition-all duration-200 ${
-                            link.active
-                                ? "bg-violet-500 text-violet-200 font-semibold"
-                                : "bg-violet-300 text-violet-900 hover:bg-violet-400"
-                        } ${!link.url ? "opacity-50 cursor-not-allowed" : ""}`}
-                    />
-                ))}
-            </div>
-        );
-    }
-
     return (
         <MainLayout
             header={
                 <div className="w-full flex items-center justify-between ">
-                    <Link href="/store" className="link ml-10">
+                    <Link href={`/store?view=${view}`} className="link ml-10">
                         Add a Song
                     </Link>
                     <button

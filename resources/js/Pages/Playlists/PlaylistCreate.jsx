@@ -12,6 +12,8 @@ export default function PlaylistDashboard() {
     });
     const [errors, setErrors] = useState({});
 
+    const type = new URLSearchParams(window.location.search).get("type");
+
     async function handleCreate(e) {
         e.preventDefault();
 
@@ -23,7 +25,7 @@ export default function PlaylistDashboard() {
                 },
             });
 
-            router.visit("/pDashboard");
+            router.visit(`/pDashboard?type=${type}`);
         } catch (error) {
             console.log("Validation error response:", error.response);
 
@@ -39,7 +41,7 @@ export default function PlaylistDashboard() {
         <MainLayout
             header={
                 <button
-                    onClick={() => window.history.back()}
+                    onClick={() => router.visit(`/pDashboard?type=${type}`)}
                     className="px-4 py-2 link"
                 >
                     Back
