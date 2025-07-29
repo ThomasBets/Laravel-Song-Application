@@ -244,9 +244,6 @@ export default function Dashboard() {
                                                                 />
                                                             </button>
                                                         </th>
-                                                        <th className="px-4 py-4">
-                                                            Preview
-                                                        </th>
 
                                                         <th className="px-4 py-3"></th>
                                                     </tr>
@@ -272,20 +269,6 @@ export default function Dashboard() {
                                                                     {
                                                                         song.release_date
                                                                     }
-                                                                </td>
-                                                                <td className="px-4 py-3">
-                                                                    {song.audio_url ? (
-                                                                        <WaveformPlayer
-                                                                            audioUrl={
-                                                                                song.audio_url
-                                                                            }
-                                                                        />
-                                                                    ) : (
-                                                                        <span className="text-sm text-violet-200 italic">
-                                                                            No
-                                                                            audio
-                                                                        </span>
-                                                                    )}
                                                                 </td>
 
                                                                 <td className="px-4 py-3 space-x-4">

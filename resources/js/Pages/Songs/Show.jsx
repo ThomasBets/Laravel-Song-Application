@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { usePage } from "@inertiajs/react";
 import { AppContext } from "../../Context/AppContext";
 import MainLayout from "../../Layouts/MainLayout";
+import WaveformPlayer from "@/Components/WaveformPlayer";
 
 export default function Show() {
     const [error, setError] = useState(null); // For handling any fetch errors
@@ -85,6 +86,7 @@ export default function Show() {
                             <p className="text-lg font-bold text-violet-400">
                                 Release Date: {song.release_date}
                             </p>
+                            <WaveformPlayer audioUrl={song.audio_url} />
                         </>
                     )}
 
