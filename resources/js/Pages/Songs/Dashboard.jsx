@@ -3,6 +3,7 @@ import { Link, router, usePage } from "@inertiajs/react";
 import { AppContext } from "../../Context/AppContext";
 import MainLayout from "../../Layouts/MainLayout";
 import Pagination from "@/Components/Pagination";
+import WaveformPlayer from "@/Components/WaveformPlayer";
 
 export default function Dashboard() {
     const { token } = useContext(AppContext);
@@ -274,22 +275,11 @@ export default function Dashboard() {
                                                                 </td>
                                                                 <td className="px-4 py-3">
                                                                     {song.audio_url ? (
-                                                                        <audio
-                                                                            controls
-                                                                            className="w-48"
-                                                                            src={
+                                                                        <WaveformPlayer
+                                                                            audioUrl={
                                                                                 song.audio_url
                                                                             }
-                                                                        >
-                                                                            Your
-                                                                            browser
-                                                                            does
-                                                                            not
-                                                                            support
-                                                                            the
-                                                                            audio
-                                                                            element.
-                                                                        </audio>
+                                                                        />
                                                                     ) : (
                                                                         <span className="text-sm text-violet-200 italic">
                                                                             No
