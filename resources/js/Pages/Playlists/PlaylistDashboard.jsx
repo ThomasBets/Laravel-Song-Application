@@ -22,7 +22,7 @@ export default function PlaylistDashboard() {
 
     useEffect(() => {
         fetchPlaylists(type);
-    }, [type]);
+    }, [url, type]);
 
     const fetchPlaylists = async (selectedType, page = 1) => {
         setLoading(true);
@@ -132,7 +132,17 @@ export default function PlaylistDashboard() {
                             <div className="loader ease-linear rounded-full border-4 border-t-4 border-violet-400 h-8 w-8"></div>
                         </div>
                     ) : playlistsData.data.length === 0 ? (
-                        <p>No playlists found.</p>
+                        <div>
+                            <p className="text-violet-300 font-semibold">
+                                No playlists found.
+                            </p>
+                            <Link
+                                href="/pStore"
+                                className="mt-4 inline-block text-violet-300 underline"
+                            >
+                                Create a new Playlist!
+                            </Link>
+                        </div>
                     ) : (
                         <>
                             <div className="overflow-x-auto">

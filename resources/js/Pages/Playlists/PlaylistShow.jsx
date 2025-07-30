@@ -173,6 +173,14 @@ export default function PlaylistShow() {
                                                 className="px-4 py-3 text-violet-300"
                                             >
                                                 No songs in this playlist.
+                                                <div>
+                                                    <Link
+                                                        href="/store"
+                                                        className="mt-2 inline-block text-violet-300 underline"
+                                                    >
+                                                        Create a new Song!
+                                                    </Link>
+                                                </div>
                                             </td>
                                         </tr>
                                     )}
