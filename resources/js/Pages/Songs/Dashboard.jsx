@@ -3,7 +3,6 @@ import { Link, router, usePage } from "@inertiajs/react";
 import { AppContext } from "../../Context/AppContext";
 import MainLayout from "../../Layouts/MainLayout";
 import Pagination from "@/Components/Pagination";
-import WaveformPlayer from "@/Components/WaveformPlayer";
 
 export default function Dashboard() {
     const { token } = useContext(AppContext);
