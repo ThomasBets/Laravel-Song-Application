@@ -34,7 +34,7 @@ export default function PlaylistShow() {
             .catch((err) => console.error("Failed to fetch the playlist", err));
     }, [id, token]);
 
-    async function handleDetach(songId) {
+    async function handleDelete(songId) {
         if (
             !confirm(
                 "Are you sure you want to remove this song from the playlist?"
@@ -154,7 +154,7 @@ export default function PlaylistShow() {
                                                     <td>
                                                         <button
                                                             onClick={() =>
-                                                                handleDetach(
+                                                                handleDelete(
                                                                     song.id
                                                                 )
                                                             }
