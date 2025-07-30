@@ -17,7 +17,6 @@ export default function Show() {
         // Function to fetch song data by ID
         async function fetchSong() {
             setLoading(true); // Start loading when fetch begins
-            setError(null); // Clear previous errors
 
             try {
                 const res = await fetch(`/api/songs/${id}`, {
@@ -86,7 +85,9 @@ export default function Show() {
                             <p className="text-lg font-bold text-violet-400">
                                 Release Date: {song.release_date}
                             </p>
+                            <div className="mt-6">
                             <WaveformPlayer audioUrl={song.audio_url} />
+                            </div>
                         </>
                     )}
 

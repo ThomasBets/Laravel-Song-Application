@@ -15,7 +15,7 @@ export default function Create() {
         description: "",
         genre: "",
         release_date: "",
-        audio_file: null, // store actual File object
+        audio_file_path: null,
         playlist_id: playlist_id || null,
     });
 
@@ -31,8 +31,8 @@ export default function Create() {
         body.append("description", formData.description);
         body.append("genre", formData.genre);
         body.append("release_date", formData.release_date);
-        if (formData.audio_file) {
-            body.append("audio_file", formData.audio_file);
+        if (formData.audio_file_path) {
+            body.append("audio_file_path", formData.audio_file_path);
         }
         if (formData.playlist_id) {
             body.append("playlist_id", formData.playlist_id);
@@ -206,12 +206,12 @@ export default function Create() {
                                 onChange={(e) =>
                                     setFormData({
                                         ...formData,
-                                        audio_file: e.target.files[0],
+                                        audio_file_path: e.target.files[0],
                                     })
                                 }
                             />
-                            {errors.audio_file && (
-                                <p className="error">{errors.audio_file[0]}</p>
+                            {errors.audio_file_path && (
+                                <p className="error">{errors.audio_file_path[0]}</p>
                             )}
                         </div>
 

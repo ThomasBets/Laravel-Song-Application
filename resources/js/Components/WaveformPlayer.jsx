@@ -9,12 +9,12 @@ export default function WaveformPlayer({ audioUrl }) {
     useEffect(() => {
         if (!audioUrl) return;
 
-
         wavesurferRef.current = WaveSurfer.create({
             container: waveformRef.current,
             waveColor: "#a78bfa", // Violet 400
             progressColor: "#7c3aed", // Violet 600
             height: 60,
+            backgroundColor: "#1e1e2f",
             responsive: true,
         });
 

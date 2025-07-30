@@ -21,8 +21,6 @@ export default function Dashboard() {
     const [sortDirection, setSortDirection] = useState("desc");
 
     async function fetchSongs(fetchUrl) {
-        setError(null);
-        setNoSongsMessage("");
         setLoading(true);
 
         try {
@@ -149,8 +147,7 @@ export default function Dashboard() {
                                                                             !showGenreMenu
                                                                         )
                                                                     }
-                                                                    className="w-5 h-5 flex items-center justify-center transition-transform duration-200"
-                                                                    aria-label="Toggle Genre Menu"
+                                                                    className="w-5 h-5 flex items-center justify-center"
                                                                 >
                                                                     <img
                                                                         src="/icons/arrow-down.svg"
@@ -229,7 +226,6 @@ export default function Dashboard() {
                                                                     );
                                                                 }}
                                                                 className="flex items-center gap-1 text-violet-400 uppercase"
-                                                                aria-label="Sort by Release Date"
                                                             >
                                                                 Release Date
                                                                 <img
