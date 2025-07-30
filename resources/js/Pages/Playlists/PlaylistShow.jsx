@@ -175,7 +175,7 @@ export default function PlaylistShow() {
                                                 No songs in this playlist.
                                                 <div>
                                                     <Link
-                                                        href="/store"
+                                                        href={`/store?playlist_id=${playlist.id}&type=${type}`}
                                                         className="mt-2 inline-block text-violet-300 underline"
                                                     >
                                                         Create a new Song!
