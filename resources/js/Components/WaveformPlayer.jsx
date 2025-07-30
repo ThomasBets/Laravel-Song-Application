@@ -14,7 +14,6 @@ export default function WaveformPlayer({ audioUrl }) {
             waveColor: "#a78bfa", // Violet 400
             progressColor: "#7c3aed", // Violet 600
             height: 60,
-            backgroundColor: "#1e1e2f",
             responsive: true,
         });
 
