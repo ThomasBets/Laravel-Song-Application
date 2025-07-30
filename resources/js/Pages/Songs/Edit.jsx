@@ -8,7 +8,7 @@ export default function Edit() {
     const { url } = usePage();
 
     // Extract the song ID from the URL (second-to-last segment) because the url looks like http://127.0.0.1:8000/songs/{id}/edit and we need the id
-    const segments = url.split("/").filter(Boolean);
+    const segments = url.split("/");
     const id = segments[segments.length - 2];
 
     // Initial form state
