@@ -2,7 +2,7 @@ Follow these steps to set up and run the project locally.
 
 ---
 
-## ✅ Requirements
+##  Requirements
 Make sure the following are installed on your computer:
 - **PHP** (v8.0+ recommended)
 - **Composer** (PHP dependency manager)
@@ -12,7 +12,7 @@ Make sure the following are installed on your computer:
 
 ---
 
-## 🚀 Installation
+##  Installation
 
 ### 1. Clone the Repository
 ```bash
@@ -67,11 +67,6 @@ npm run dev
 ```bash
 php artisan serve
 ```
-Now visit 👉 [http://localhost:8000](http://localhost:8000)
+Now visit [http://localhost:8000](http://localhost:8000)
 
 ---
-
-## 🎉 Done!
-You should now have the project running locally. Happy coding!
-
-g laravel_setup_readme.md…]()
