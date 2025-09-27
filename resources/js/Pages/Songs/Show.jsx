@@ -86,7 +86,7 @@ export default function Show() {
                                 Release Date: {song.release_date}
                             </p>
                             <div className="mt-6">
-                            <WaveformPlayer audioUrl={song.audio_url} />
+                            {/* <WaveformPlayer audioUrl={song.audio_url} /> */}
                             </div>
                         </>
                     )}

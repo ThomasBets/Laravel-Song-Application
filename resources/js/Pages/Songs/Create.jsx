@@ -195,7 +195,7 @@ export default function Create() {
                         </div>
 
                         {/* Audio File Upload */}
-                        <div className="mb-4">
+                        {/* <div className="mb-4">
                             <label className="block text-violet-200 mb-1">
                                 Audio File
                             </label>
@@ -213,7 +213,7 @@ export default function Create() {
                             {errors.audio_file_path && (
                                 <p className="error">{errors.audio_file_path[0]}</p>
                             )}
-                        </div>
+                        </div> */}
 
                         {/* Submit Button */}
                         <button type="submit" className="w-full button">
