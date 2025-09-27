@@ -35,6 +35,8 @@ npm install
   ```bash
   cp .env.example .env
   ```
+- Or create a .env file if .env.example does not exist
+  
 - Open `.env` and update:
   - Database name
   - Database username
