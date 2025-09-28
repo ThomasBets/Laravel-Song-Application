@@ -53,6 +53,9 @@ php artisan key:generate
 
 ### 6. Set Up Database
 - Create a database in MySQL (use the name from `.env`).
+  ```bash
+  docker compose up
+  ```
 - Run migrations:
   ```bash
   php artisan migrate
