@@ -59,10 +59,7 @@ php artisan key:generate
   php artisan db:seed
   ```
 
-### 7. Build Frontend Assets (if applicable)
-```bash
-npm install
-```
+### 7. Install and Build Frontend Assets (if applicable)
 
 ```bash
 npm install -g vite
