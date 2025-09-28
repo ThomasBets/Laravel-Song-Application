@@ -29,6 +29,9 @@ composer install
 ```bash
 npm install
 ```
+```bash
+npm install -g vite
+```
 
 ### 4. Configure Environment
 - Copy `.env.example` to `.env`:
@@ -59,7 +62,7 @@ php artisan key:generate
   php artisan db:seed
   ```
 
-### 7. Install and Build Frontend Assets (if applicable)
+### 7. Build Frontend Assets (if applicable)
 
 ```bash
 npm install -g vite
