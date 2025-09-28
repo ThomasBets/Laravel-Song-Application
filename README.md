@@ -63,11 +63,6 @@ php artisan key:generate
   ```
 
 ### 7. Build Frontend Assets (if applicable)
-
-```bash
-npm install -g vite
-```
-
 ```bash
 npm run dev
 ```
